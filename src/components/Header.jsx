@@ -2,9 +2,9 @@ import { Link } from 'react-router-dom';
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Playground Badge - Top Center */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 relative">
+      {/* Playground Badge - Center */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <span className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700 border border-purple-200 shadow-sm">
           Playground
         </span>
