@@ -32,7 +32,7 @@ export default function Sidebar() {
     <aside className="hidden lg:block border-r bg-white min-h-[calc(100vh-7rem)]" style={{ width: '194px' }}>
       <nav className="px-2 pt-6 pb-2" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {/* Top Section */}
-        <div className="mb-8">
+        <div className="mb-4">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <Link to="/" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('get-started')}`} style={{ height: '32px' }}>
               <HomeIconOutline className="h-5 w-5" />
@@ -46,7 +46,7 @@ export default function Sidebar() {
         </div>
 
         {/* Data services Section */}
-        <div className="mb-8">
+        <div className="mb-4">
           <h3 className="mb-3 px-3 text-sm font-bold text-gray-900 tracking-wider" style={{ fontSize: '14px' }}>Data services</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <Link to="/instances" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('instances')}`} style={{ height: '32px' }}>
@@ -78,7 +78,7 @@ export default function Sidebar() {
         </div>
 
         {/* Tools Section */}
-        <div className="mb-8">
+        <div className="mb-4">
           <h3 className="mb-3 px-3 text-sm font-bold text-gray-900 tracking-wider" style={{ fontSize: '14px' }}>Tools</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('import')}`} style={{ height: '32px' }}>
