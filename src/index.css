@@ -71,7 +71,7 @@
 
 /* Button Styles - Global defaults */
 button {
-    font-weight: 600 !important; /* semibold */
+    font-weight: 700 !important; /* bold */
     font-size: 14px !important;
     color: #4d5157 !important;
     height: 28px !important;
