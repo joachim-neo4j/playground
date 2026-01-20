@@ -10,7 +10,7 @@ export default function StatusBar() {
           </svg>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-gray-700">Database: neo4j CYPHER 5</span>
+          <span className="text-gray-700">Database: neo4j <span className="text-[0.5rem] leading-[0.75rem]" style={{ color: '#5E636A' }}>CYPHER 5</span></span>
           <svg className="h-4 w-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
           </svg>
