@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIconOutline } from '@neo4j-ndl/react/icons';
+import { HomeIconOutline, CodeBracketIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -38,9 +38,7 @@ export default function Sidebar() {
             <span>Get started</span>
           </Link>
           <Link to="/developer-hub" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('developer-hub')}`}>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-            </svg>
+            <CodeBracketIconOutline className="h-5 w-5" />
             <span>Developer hub</span>
           </Link>
         </div>
