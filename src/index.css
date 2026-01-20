@@ -51,7 +51,9 @@
     }
     h1 {
         font-family: 'Syne Neo', 'Public Sans', sans-serif;
+        font-size: 40px;
         font-weight: normal;
+        color: #1A1B1D;
         letter-spacing: 0;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
