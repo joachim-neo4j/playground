@@ -139,3 +139,10 @@ button.border-neo-blue {
 .tab-inactive {
     color: #4d5157 !important; /* Inactive tab */
 }
+
+/* Sidebar icon sizing */
+aside nav svg,
+aside nav [class*="Icon"] {
+    width: 20px !important;
+    height: 20px !important;
+}
