@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
+import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline, CloudArrowDownIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -82,9 +82,7 @@ export default function Sidebar() {
           <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 tracking-wider">Tools</h3>
           <div className="space-y-1">
           <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('import')}`}>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-            </svg>
+            <CloudArrowDownIconOutline className="h-5 w-5" />
             <span>Import</span>
           </Link>
           <Link to="/query" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('query')}`}>
