@@ -121,7 +121,7 @@ export default function Sidebar() {
         </div>
 
         {/* Separator */}
-        <div className="border-t border-gray-200 my-4"></div>
+        <div className="border-t border-gray-200" style={{ marginTop: '4px', marginBottom: '4px' }}></div>
 
         {/* Bottom Section */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -145,7 +145,7 @@ export default function Sidebar() {
           </Link>
           
           {/* Divider */}
-          <div className="border-t border-gray-200 my-4"></div>
+          <div className="border-t border-gray-200" style={{ marginTop: '4px', marginBottom: '4px' }}></div>
           
           <Link to="/learning" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('learning')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
