@@ -28,7 +28,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden lg:block w-64 border-r bg-white min-h-[calc(100vh-7rem)]">
+    <aside className="hidden lg:block border-r bg-white min-h-[calc(100vh-7rem)]" style={{ width: '194px' }}>
       <nav className="px-2 pt-6 pb-2">
         {/* Top Section - No heading */}
         <div className="mb-8">
