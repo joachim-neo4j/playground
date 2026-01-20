@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import GetStarted from './pages/GetStarted';
 import DeveloperHub from './pages/DeveloperHub';
 import Instances from './pages/Instances';
@@ -14,9 +15,35 @@ import Project from './pages/Project';
 import Learning from './pages/Learning';
 import Debug from './pages/Debug';
 
+// Component to handle 404.html redirect format
+function RedirectHandler() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if this is a redirect from 404.html
+    // The format is: /?/path/to/page
+    if (location.search) {
+      const params = new URLSearchParams(location.search);
+      const redirectPath = params.get('/');
+      if (redirectPath) {
+        // Decode the path (replace ~and~ with &)
+        const decodedPath = redirectPath.replace(/~and~/g, '&');
+        navigate(decodedPath, { replace: true });
+      }
+    }
+  }, [location, navigate]);
+
+  return null;
+}
+
 function App() {
+  // Use basename for GitHub Pages deployment
+  const basename = import.meta.env.BASE_URL || '/';
+  
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
+      <RedirectHandler />
       <Routes>
         <Route path="/" element={<GetStarted />} />
         <Route path="/developer-hub" element={<DeveloperHub />} />
