@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { HomeIconOutline, CodeBracketIconOutline } from '@neo4j-ndl/react/icons';
+import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
   const location = useLocation();
@@ -47,9 +47,7 @@ export default function Sidebar() {
         <div className="mb-6">
           <h3 className="mb-2 px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Data services</h3>
           <Link to="/instances" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('instances')}`}>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
-            </svg>
+            <CircleStackIconOutline className="h-5 w-5" />
             <span>Instances</span>
           </Link>
           <Link to="/graph-analytics" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('graph-analytics')}`}>
