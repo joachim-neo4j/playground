@@ -78,7 +78,7 @@ export default function Sidebar() {
         </div>
 
         {/* Tools Section */}
-        <div className="mb-4">
+        <div>
           <h3 className="mb-3 px-3 text-sm font-bold text-gray-900 tracking-wider" style={{ fontSize: '14px' }}>Tools</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('import')}`} style={{ height: '32px' }}>
