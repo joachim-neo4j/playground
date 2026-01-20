@@ -4,7 +4,7 @@ export default function DeveloperHub() {
   return (
     <Layout>
       <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8">
-        <h1 className="mb-4 text-3xl font-bold tracking-tight lg:text-4xl">Developer Hub</h1>
+        <h1 className="mb-4 text-3xl tracking-tight lg:text-4xl">Developer Hub</h1>
         <p className="mb-8 text-sm text-muted-foreground lg:text-base">Resources, documentation, and tools for building with Neo4j</p>
         
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
