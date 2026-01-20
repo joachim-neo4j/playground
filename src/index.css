@@ -56,6 +56,9 @@
         -moz-osx-font-smoothing: grayscale;
         text-rendering: optimizeLegibility;
     }
+    p {
+        font-size: 14px;
+    }
 }
 
 /* Custom Neo Blue Colors */
