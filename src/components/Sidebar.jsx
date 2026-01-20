@@ -47,7 +47,7 @@ export default function Sidebar() {
 
         {/* Data services Section */}
         <div className="mb-8">
-          <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 uppercase tracking-wider">Data services</h3>
+          <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 tracking-wider">Data services</h3>
           <div className="space-y-1">
           <Link to="/instances" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('instances')}`}>
             <CircleStackIconOutline className="h-5 w-5" />
@@ -79,7 +79,7 @@ export default function Sidebar() {
 
         {/* Tools Section */}
         <div className="mb-8">
-          <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 uppercase tracking-wider">Tools</h3>
+          <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 tracking-wider">Tools</h3>
           <div className="space-y-1">
           <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('import')}`}>
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
