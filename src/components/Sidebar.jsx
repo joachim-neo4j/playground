@@ -7,10 +7,10 @@ import {
   CircleStackIconOutline,
   Square3Stack3DIconOutline,
   ArrowDownTrayIconOutline,
-  QueryIcon,
-  ExploreIcon,
+  CommandLineIconOutline,
+  MagnifyingGlassIconOutline,
   ChartBarSquareIconOutline,
-  HeartbeatIcon,
+  Cog6ToothIconOutline,
   FolderIconOutline,
   AcademicCapIconOutline,
   WrenchScrewdriverIconOutline,
@@ -89,11 +89,11 @@ export default function Sidebar() {
             <span>Import</span>
           </Link>
           <Link to="/query" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('query')}`}>
-            <QueryIcon className="h-5 w-5" />
+            <CommandLineIconOutline className="h-5 w-5" />
             <span>Query</span>
           </Link>
           <Link to="/explore" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('explore')}`}>
-            <ExploreIcon className="h-5 w-5" />
+            <MagnifyingGlassIconOutline className="h-5 w-5" />
             <span>Explore</span>
           </Link>
           <Link to="/dashboards" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('dashboards')}`}>
@@ -105,7 +105,7 @@ export default function Sidebar() {
         {/* Bottom Section */}
         <div>
           <Link to="/operations" className={`flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('operations')}`}>
-            <HeartbeatIcon className="h-5 w-5" />
+            <Cog6ToothIconOutline className="h-5 w-5" />
             <span>Operations</span>
             <ChevronRightIconOutline className="ml-auto h-4 w-4" />
           </Link>
