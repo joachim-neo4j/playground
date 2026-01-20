@@ -30,15 +30,15 @@ export default function Sidebar() {
 
   return (
     <aside className="hidden lg:block border-r bg-white min-h-[calc(100vh-7rem)]" style={{ width: '194px' }}>
-      <nav className="px-2 pt-6 pb-2 space-y-1">
+      <nav className="px-2 pt-6 pb-2" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {/* Top Section */}
         <div className="mb-8">
-          <div className="space-y-1">
-            <Link to="/" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('get-started')}`}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <Link to="/" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('get-started')}`} style={{ height: '32px' }}>
               <HomeIconOutline className="h-5 w-5" />
               <span>Get started</span>
             </Link>
-            <Link to="/developer-hub" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('developer-hub')}`}>
+            <Link to="/developer-hub" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('developer-hub')}`} style={{ height: '32px' }}>
               <CodeBracketIconOutline className="h-5 w-5" />
               <span>Developer hub</span>
             </Link>
@@ -48,12 +48,12 @@ export default function Sidebar() {
         {/* Data services Section */}
         <div className="mb-8">
           <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 tracking-wider">Data services</h3>
-          <div className="space-y-1">
-          <Link to="/instances" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('instances')}`}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <Link to="/instances" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('instances')}`} style={{ height: '32px' }}>
             <CircleStackIconOutline className="h-5 w-5" />
             <span>Instances</span>
           </Link>
-          <Link to="/graph-analytics" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('graph-analytics')}`}>
+          <Link to="/graph-analytics" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('graph-analytics')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
               <path d="M12.0068 13.6942C12.9387 13.6942 13.6943 12.9387 13.6943 12.0067C13.6943 11.0748 12.9387 10.3192 12.0068 10.3192C11.0748 10.3192 10.3193 11.0748 10.3193 12.0067C10.3193 12.9387 11.0748 13.6942 12.0068 13.6942Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
               <path d="M14.7912 14.791C19.1846 10.3976 21.4996 5.58948 19.9619 4.05179C18.4242 2.5141 13.6161 4.82911 9.22275 9.22251C4.82935 13.6159 2.51434 18.424 4.05203 19.9617C5.58972 21.4994 10.3978 19.1844 14.7912 14.791Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -61,13 +61,13 @@ export default function Sidebar() {
             </svg>
             <span>Graph Analytics</span>
           </Link>
-          <Link to="/data-apis" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('data-apis')}`}>
+          <Link to="/data-apis" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('data-apis')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25"></path>
             </svg>
             <span>Data APIs</span>
           </Link>
-          <Link to="/agents" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('agents')}`}>
+          <Link to="/agents" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('agents')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"></path>
             </svg>
@@ -80,20 +80,20 @@ export default function Sidebar() {
         {/* Tools Section */}
         <div className="mb-8">
           <h3 className="mb-3 px-3 text-xs font-bold text-gray-900 tracking-wider">Tools</h3>
-          <div className="space-y-1">
-          <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('import')}`}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <Link to="/import" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('import')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9.75v6.75m0 0-3-3m3 3 3-3m-8.25 6a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z"></path>
             </svg>
             <span>Import</span>
           </Link>
-          <Link to="/query" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('query')}`}>
+          <Link to="/query" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('query')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
             </svg>
             <span>Query</span>
           </Link>
-          <Link to="/explore" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('explore')}`}>
+          <Link to="/explore" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('explore')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" strokeWidth="1.3" stroke="currentColor">
               <g>
                 <path d="M6.6875 7.12384C6.6875 7.41111 6.74408 7.69556 6.85401 7.96096C6.96395 8.22636 7.12508 8.46751 7.3282 8.67064C7.53133 8.87376 7.77248 9.03489 8.03788 9.14483C8.30328 9.25476 8.58773 9.31134 8.875 9.31134C9.16227 9.31134 9.44672 9.25476 9.71212 9.14483C9.97752 9.03489 10.2187 8.87376 10.4218 8.67064C10.6249 8.46751 10.7861 8.22636 10.896 7.96096C11.0059 7.69556 11.0625 7.41111 11.0625 7.12384C11.0625 6.83657 11.0059 6.55212 10.896 6.28672C10.7861 6.02132 10.6249 5.78017 10.4218 5.57704C10.2187 5.37392 9.97752 5.21279 9.71212 5.10285C9.44672 4.99292 9.16227 4.93634 8.875 4.93634C8.58773 4.93634 8.30328 4.99292 8.03788 5.10285C7.77248 5.21279 7.53133 5.37392 7.3282 5.57704C7.12508 5.78017 6.96395 6.02132 6.85401 6.28672C6.74408 6.55212 6.6875 6.83657 6.6875 7.12384Z" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.3"></path>
@@ -111,7 +111,7 @@ export default function Sidebar() {
             </svg>
             <span>Explore</span>
           </Link>
-          <Link to="/dashboards" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('dashboards')}`}>
+          <Link to="/dashboards" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('dashboards')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 7.125C2.25 6.504 2.754 6 3.375 6h6c.621 0 1.125.504 1.125 1.125v3.75c0 .621-.504 1.125-1.125 1.125h-6a1.125 1.125 0 0 1-1.125-1.125v-3.75ZM14.25 8.625c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v8.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-8.25ZM3.75 16.125c0-.621.504-1.125 1.125-1.125h5.25c.621 0 1.125.504 1.125 1.125v2.25c0 .621-.504 1.125-1.125 1.125h-5.25a1.125 1.125 0 0 1-1.125-1.125v-2.25Z"></path>
             </svg>
@@ -124,8 +124,8 @@ export default function Sidebar() {
         <div className="border-t border-gray-200 my-4"></div>
 
         {/* Bottom Section */}
-        <div className="space-y-1">
-          <Link to="/operations" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('operations')}`}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <Link to="/operations" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('operations')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
               <path d="M2 11.666H5.11125C5.37454 11.6661 5.63197 11.5882 5.85107 11.4421C6.07017 11.296 6.24113 11.0882 6.34242 10.8451L8.65363 5.40614C8.70642 5.28187 8.79565 5.17656 8.90954 5.10412C9.02343 5.03168 9.15661 4.99553 9.29147 5.00044C9.42634 5.00536 9.55654 5.05111 9.66486 5.13165C9.77318 5.21219 9.85452 5.32372 9.89813 5.45151L14.1063 18.5485C14.1499 18.6763 14.2313 18.7878 14.3396 18.8684C14.4479 18.9489 14.5781 18.9946 14.713 18.9996C14.8478 19.0045 14.981 18.9683 15.0949 18.8959C15.2088 18.8234 15.298 18.7181 15.3508 18.5939L17.6576 12.487C17.7589 12.2438 17.9298 12.0361 18.1489 11.89C18.368 11.7439 18.6255 11.6659 18.8888 11.666H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
             </svg>
@@ -134,7 +134,7 @@ export default function Sidebar() {
               <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
             </svg>
           </Link>
-          <Link to="/project" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('project')}`}>
+          <Link to="/project" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('project')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z"></path>
             </svg>
@@ -143,7 +143,7 @@ export default function Sidebar() {
               <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
             </svg>
           </Link>
-          <Link to="/learning" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('learning')}`}>
+          <Link to="/learning" className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('learning')}`} style={{ height: '32px' }}>
             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342M6.75 15a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm0 0v-3.675A55.378 55.378 0 0 1 12 8.443m-7.007 11.55A5.981 5.981 0 0 0 6.75 15.75v-1.5"></path>
             </svg>
