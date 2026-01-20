@@ -55,7 +55,7 @@ export default function Header() {
               </svg>
             </button>
             <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground" style={{ height: '32px', width: '32px' }}>
-              <div className="flex items-center justify-center rounded-full bg-neo-blue-light text-neo-blue-dark font-semibold text-sm" style={{ backgroundColor: '#e6f2f8', color: '#084d73', height: '32px', width: '32px' }}>
+              <div className="flex items-center justify-center rounded-full text-neo-blue-dark font-semibold text-sm" style={{ backgroundColor: '#e6f2f8', color: '#084d73', height: '32px', width: '32px' }}>
                 JL
               </div>
             </button>
