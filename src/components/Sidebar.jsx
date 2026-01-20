@@ -68,11 +68,11 @@ export default function Sidebar() {
             <span>Data APIs</span>
           </Link>
           <Link to="/agents" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('agents')}`}>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75 2.25 12l4.179 2.25m0-4.5 5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0 4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0-5.571 3-5.571-3"></path>
             </svg>
             <span>Agents</span>
-            <span className="ml-auto rounded-full bg-neo-blue px-2 py-0.5 text-xs text-white">Preview</span>
+            <span className="ml-auto rounded-full bg-neo-blue px-2 text-xs text-white leading-tight" style={{ paddingTop: '0px', paddingBottom: '0px', lineHeight: '1.25rem' }}>Preview</span>
           </Link>
           </div>
         </div>
