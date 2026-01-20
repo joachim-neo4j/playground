@@ -54,7 +54,7 @@ export default function Header() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"></path>
               </svg>
             </span>
-            <span className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground" style={{ height: '32px', width: '32px' }}>
+            <span className="inline-flex items-center justify-center text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground" style={{ height: '32px', width: '32px', borderRadius: '9999px' }}>
               <div className="flex items-center justify-center rounded-full text-neo-blue-dark font-semibold text-sm" style={{ backgroundColor: '#e6f2f8', color: '#084d73', height: '32px', width: '32px' }}>
                 JL
               </div>
