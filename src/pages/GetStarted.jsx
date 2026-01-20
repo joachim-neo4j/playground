@@ -7,7 +7,7 @@ export default function GetStarted() {
         {/* Title and Action Buttons */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div className="mb-4 sm:mb-0">
-            <h1 className="mb-2 text-3xl font-bold tracking-tight lg:text-4xl">Get started</h1>
+            <h1 className="mb-2 text-3xl font-bold lg:text-4xl">Get started</h1>
             <p className="text-sm text-muted-foreground lg:text-base">Explore the content below to maximize your Neo4j Aura experience</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row">
