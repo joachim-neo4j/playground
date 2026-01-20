@@ -57,9 +57,9 @@ export default function Header() {
               </svg>
             </button>
             <button className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-10 w-10">
-              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-              </svg>
+              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-neo-blue-light text-neo-blue-dark font-semibold text-sm" style={{ backgroundColor: '#e6f2f8', color: '#084d73' }}>
+                JL
+              </div>
             </button>
           </div>
           {/* Mobile menu button */}
