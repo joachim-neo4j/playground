@@ -4,8 +4,8 @@
 
 @font-face {
     font-family: 'Syne Neo';
-    src: url('/syne-neo-500-medium-normal-A5GXmYUf.woff2') format('woff2');
-    font-weight: 500;
+    src: url('/_Syne Neo__Syne Neo_--normal.woff2') format('woff2');
+    font-weight: normal;
     font-style: normal;
 }
 
@@ -51,9 +51,6 @@
     }
     h1 {
         font-family: 'Syne Neo', 'Public Sans', sans-serif;
-        font-size: 40px;
-        font-weight: normal;
-        color: #1A1B1D;
         letter-spacing: 0;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
