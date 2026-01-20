@@ -124,9 +124,8 @@ export default function Sidebar() {
         {/* Bottom Section */}
         <div className="space-y-1">
           <Link to="/operations" className={`relative flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium ${isActive('operations')}`}>
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
+              <path d="M2 11.666H5.11125C5.37454 11.6661 5.63197 11.5882 5.85107 11.4421C6.07017 11.296 6.24113 11.0882 6.34242 10.8451L8.65363 5.40614C8.70642 5.28187 8.79565 5.17656 8.90954 5.10412C9.02343 5.03168 9.15661 4.99553 9.29147 5.00044C9.42634 5.00536 9.55654 5.05111 9.66486 5.13165C9.77318 5.21219 9.85452 5.32372 9.89813 5.45151L14.1063 18.5485C14.1499 18.6763 14.2313 18.7878 14.3396 18.8684C14.4479 18.9489 14.5781 18.9946 14.713 18.9996C14.8478 19.0045 14.981 18.9683 15.0949 18.8959C15.2088 18.8234 15.298 18.7181 15.3508 18.5939L17.6576 12.487C17.7589 12.2438 17.9298 12.0361 18.1489 11.89C18.368 11.7439 18.6255 11.6659 18.8888 11.666H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
             </svg>
             <span className="flex-1">Operations</span>
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
