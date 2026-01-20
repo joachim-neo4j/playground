@@ -26,3 +26,4 @@ dist-ssr
 # Old HTML files (keep for reference, but not needed in React app)
 *.html
 !index.html
+!public/404.html
