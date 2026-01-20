@@ -29,10 +29,10 @@ export default function GetStarted() {
         {/* Tabs */}
         <div className="mb-8 border-b">
           <div className="flex space-x-6">
-            <button className="border-b-2 border-neo-blue pb-4 px-1 text-sm font-medium text-neo-blue lg:text-base">
+            <button className="border-b-2 border-neo-blue pb-4 px-2 text-sm font-bold text-neo-blue">
               Application development
             </button>
-            <button className="border-b-2 border-transparent pb-4 px-1 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 lg:text-base">
+            <button className="border-b-2 border-transparent pb-4 px-2 text-sm font-bold transition-colors hover:text-gray-900 tab-inactive">
               Self-managed deployments
             </button>
           </div>

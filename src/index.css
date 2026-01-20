@@ -116,3 +116,12 @@ svg.logo {
 .text-muted-foreground {
     color: #4d5157ff !important;
 }
+
+/* Tab styling */
+button.border-neo-blue {
+    color: #0a6190 !important; /* Active tab - neo-blue */
+}
+
+.tab-inactive {
+    color: #4d5157 !important; /* Inactive tab */
+}
