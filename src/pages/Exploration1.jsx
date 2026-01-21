@@ -760,6 +760,18 @@ export default function Exploration1() {
       return;
     }
 
+    // Check if clicking on an object (for all tools)
+    const clickedObject = [...state.objects]
+      .reverse()
+      .find(obj => {
+        return (
+          world.x >= obj.x &&
+          world.x <= obj.x + obj.width &&
+          world.y >= obj.y &&
+          world.y <= obj.y + obj.height
+        );
+      });
+
     if (state.tool === 'select') {
       // If editing a sticky note or text, save it when clicking outside
       if (state.editingTextId) {
@@ -783,18 +795,6 @@ export default function Exploration1() {
         }
       }
       
-      // Check if clicking on an object
-      const clickedObject = [...state.objects]
-        .reverse()
-        .find(obj => {
-          return (
-            world.x >= obj.x &&
-            world.x <= obj.x + obj.width &&
-            world.y >= obj.y &&
-            world.y <= obj.y + obj.height
-          );
-        });
-
       if (clickedObject) {
         dispatch({ type: ActionTypes.SELECT_OBJECT, id: clickedObject.id });
         isDragging.current = true;
@@ -804,8 +804,12 @@ export default function Exploration1() {
           y: world.y - clickedObject.y,
         };
       } else {
+        // Clicking on empty canvas - deselect all
         dispatch({ type: ActionTypes.DESELECT_ALL });
       }
+    } else if (!clickedObject) {
+      // For other tools, if clicking on empty canvas, deselect all
+      dispatch({ type: ActionTypes.DESELECT_ALL });
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
