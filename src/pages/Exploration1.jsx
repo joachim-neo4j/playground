@@ -595,6 +595,14 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
     '#B3FFB3', // Darker green
     '#D9B3FF', // Darker purple
     '#FFB3D9', // Darker pink
+    '#7FB896', // Very dark green
+    '#B0B0B0', // Medium gray
+    '#FF8080', // Very dark red
+    '#8080FF', // Very dark blue
+    '#FFB380', // Very dark orange
+    '#80FF80', // Very dark green
+    '#B380FF', // Very dark purple
+    '#FF80BF', // Very dark pink
   ];
 
   const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
@@ -654,7 +662,7 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                   borderColor: '#d1d5db',
                   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gridTemplateColumns: 'repeat(12, 1fr)',
                   gap: '4px',
                 }}
               >
