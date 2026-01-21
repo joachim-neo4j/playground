@@ -528,10 +528,10 @@ export default function Exploration1() {
   return (
     <Layout>
       <div 
-        className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8" 
         style={{ 
           backgroundColor: '#f5f6f6', 
           height: '100%', 
+          width: '100%',
           position: 'relative', 
           overflow: 'hidden',
           display: 'flex',
