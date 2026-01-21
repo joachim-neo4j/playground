@@ -51,9 +51,15 @@ export default function Sidebar() {
               onMouseEnter={(e) => {
                 setShowPlaygroundMenu(true);
                 const rect = e.currentTarget.getBoundingClientRect();
-                setPlaygroundMenuPosition({ top: rect.top, left: rect.right + 4 });
+                setPlaygroundMenuPosition({ top: rect.top, left: rect.right });
               }}
-              onMouseLeave={() => setShowPlaygroundMenu(false)}
+              onMouseLeave={(e) => {
+                // Only close if we're not moving to the dropdown
+                const relatedTarget = e.relatedTarget;
+                if (!relatedTarget || !relatedTarget.closest('.playground-dropdown')) {
+                  setShowPlaygroundMenu(false);
+                }
+              }}
             >
               <div className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('playground')}`} style={{ height: '32px', cursor: 'pointer' }}>
                 <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
@@ -67,7 +73,7 @@ export default function Sidebar() {
             </div>
             {showPlaygroundMenu && playgroundMenuPosition && createPortal(
               <div 
-                className="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1"
+                className="playground-dropdown fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1"
                 style={{ top: `${playgroundMenuPosition.top}px`, left: `${playgroundMenuPosition.left}px` }}
                 onMouseEnter={() => setShowPlaygroundMenu(true)}
                 onMouseLeave={() => setShowPlaygroundMenu(false)}
