@@ -59,7 +59,7 @@ export default function Sidebar() {
                 </svg>
               </div>
               {showPlaygroundMenu && (
-                <div className="absolute left-full top-0 ml-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px] py-1">
+                <div className="absolute left-full top-0 ml-1 bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1">
                   <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</div>
                   <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 2</div>
                   <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
