@@ -808,7 +808,7 @@ export default function Exploration1() {
       // Create new object
       const colors = {
         sticky: '#D4EDDA', // Light green color matching the screenshot
-        rectangle: '#2196F3',
+        rectangle: '#FFFFFF', // White background
         text: '#000000',
       };
       
