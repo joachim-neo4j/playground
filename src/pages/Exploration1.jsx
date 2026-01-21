@@ -342,6 +342,114 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
   );
 }
 
+// Zoom Toolbar Component
+function ZoomToolbar({ zoom, onZoomIn, onZoomOut }) {
+  const [hoveredButton, setHoveredButton] = React.useState(null);
+  const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
+
+  const ZoomInIcon = () => (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM10.5 7.5v6m3-3h-6" />
+    </svg>
+  );
+
+  const ZoomOutIcon = () => (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607ZM13.5 10.5h-6" />
+    </svg>
+  );
+
+  const handleMouseEnter = (buttonId) => (e) => {
+    setHoveredButton(buttonId);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8,
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredButton(null);
+  };
+
+  const zoomPercentage = Math.round(zoom * 100);
+
+  return (
+    <>
+      {hoveredButton && (
+        <div
+          className="toolbar-tooltip"
+          style={{
+            position: 'fixed',
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            transform: 'translate(-50%, -100%)',
+            backgroundColor: '#1f2937',
+            color: '#ffffff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 10000,
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
+        >
+          {hoveredButton === 'zoom-in' ? 'Zoom in' : 'Zoom out'}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderTop: '4px solid #1f2937',
+            }}
+          />
+        </div>
+      )}
+      <div className="absolute bottom-12 right-12 z-50">
+        <div 
+          className="rounded-lg border flex items-center gap-0.5 px-1 py-1"
+          style={{
+            backgroundColor: '#ffffff',
+            borderColor: '#d1d5db',
+            borderWidth: '1px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
+        >
+          <button
+            onClick={onZoomOut}
+            onMouseEnter={handleMouseEnter('zoom-out')}
+            onMouseLeave={handleMouseLeave}
+            className="toolbar-button rounded transition-colors flex items-center justify-center"
+            style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title="Zoom out"
+          >
+            <ZoomOutIcon />
+          </button>
+          <div className="px-2 text-sm font-medium" style={{ color: '#4b5563', minWidth: '48px', textAlign: 'center' }}>
+            {zoomPercentage}%
+          </div>
+          <button
+            onClick={onZoomIn}
+            onMouseEnter={handleMouseEnter('zoom-in')}
+            onMouseLeave={handleMouseLeave}
+            className="toolbar-button rounded transition-colors flex items-center justify-center"
+            style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            title="Zoom in"
+          >
+            <ZoomInIcon />
+          </button>
+        </div>
+      </div>
+    </>
+  );
+}
+
 // Object Components
 function StickyNote({ obj, isSelected, onPointerDown }) {
   return (
@@ -864,6 +972,49 @@ export default function Exploration1() {
   const canUndo = state.history.past.length > 0;
   const canRedo = state.history.future.length > 0;
 
+  // Zoom handlers
+  const handleZoomIn = useCallback(() => {
+    const rect = svgRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const zoomFactor = 1.2;
+    const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
+    
+    const worldBefore = screenToWorld(centerX, centerY);
+    const newX = centerX - worldBefore.x * newZoom;
+    const newY = centerY - worldBefore.y * newZoom;
+    
+    dispatch({
+      type: ActionTypes.SET_VIEWPORT,
+      viewport: {
+        x: newX,
+        y: newY,
+        zoom: newZoom,
+      },
+    });
+  }, [state.viewport, screenToWorld]);
+
+  const handleZoomOut = useCallback(() => {
+    const rect = svgRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const zoomFactor = 0.8;
+    const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
+    
+    const worldBefore = screenToWorld(centerX, centerY);
+    const newX = centerX - worldBefore.x * newZoom;
+    const newY = centerY - worldBefore.y * newZoom;
+    
+    dispatch({
+      type: ActionTypes.SET_VIEWPORT,
+      viewport: {
+        x: newX,
+        y: newY,
+        zoom: newZoom,
+      },
+    });
+  }, [state.viewport, screenToWorld]);
+
   // Prevent scrolling on the container, but allow zoom on SVG
   useEffect(() => {
     const container = containerRef.current;
@@ -959,6 +1110,11 @@ export default function Exploration1() {
           onRedo={() => dispatch({ type: ActionTypes.REDO })}
           canUndo={canUndo}
           canRedo={canRedo}
+        />
+        <ZoomToolbar
+          zoom={state.viewport.zoom}
+          onZoomIn={handleZoomIn}
+          onZoomOut={handleZoomOut}
         />
       </div>
     </Layout>
