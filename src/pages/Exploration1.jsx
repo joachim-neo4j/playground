@@ -879,7 +879,7 @@ function Rectangle({ obj, isSelected, onPointerDown }) {
   );
 }
 
-function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef }) {
+function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef, onResizeHandleDown }) {
   const inputRef = React.useRef(null);
   
   // Share ref with parent
