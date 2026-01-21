@@ -749,21 +749,21 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                     onClick={(e) => e.stopPropagation()}
                   >
                     {fontSizes.map((size) => (
-                      <button
+                      <span
                         key={size}
                         onClick={(e) => {
                           e.stopPropagation();
                           onFontSizeChange(size);
                           setShowFontSizePicker(false);
                         }}
-                        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded"
+                        className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded cursor-pointer"
                         style={{
                           backgroundColor: obj.fontSize === size ? '#e5e7eb' : 'transparent',
                           fontWeight: obj.fontSize === size ? 600 : 400,
                         }}
                       >
                         {size}px
-                      </button>
+                      </span>
                     ))}
                   </div>
                 )}
