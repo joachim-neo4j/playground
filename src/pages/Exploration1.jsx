@@ -1,5 +1,14 @@
 import { useReducer, useRef, useCallback, useEffect } from 'react';
 import Layout from '../components/Layout';
+import {
+  CursorArrowRaysIconOutline,
+  RectangleStackIconOutline,
+  RectangleGroupIconOutline,
+  DocumentTextIconOutline,
+  HandRaisedIconOutline,
+  ArrowUturnLeftIconOutline,
+  ArrowUturnRightIconOutline,
+} from '@neo4j-ndl/react/icons';
 
 // Action types
 const ActionTypes = {
@@ -170,30 +179,33 @@ function whiteboardReducer(state, action) {
 // Toolbar Component
 function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
   const tools = [
-    { id: 'select', label: 'Select', icon: '↖' },
-    { id: 'sticky', label: 'Sticky', icon: '📝' },
-    { id: 'rectangle', label: 'Rectangle', icon: '▭' },
-    { id: 'text', label: 'Text', icon: 'T' },
-    { id: 'hand', label: 'Hand', icon: '✋' },
+    { id: 'select', label: 'Select', Icon: CursorArrowRaysIconOutline },
+    { id: 'sticky', label: 'Sticky', Icon: RectangleStackIconOutline },
+    { id: 'rectangle', label: 'Rectangle', Icon: RectangleGroupIconOutline },
+    { id: 'text', label: 'Text', Icon: DocumentTextIconOutline },
+    { id: 'hand', label: 'Hand', Icon: HandRaisedIconOutline },
   ];
 
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50">
       <div className="bg-white rounded-full shadow-lg border border-gray-200 px-2 py-1 flex items-center gap-1">
-        {tools.map(t => (
-          <button
-            key={t.id}
-            onClick={() => onToolChange(t.id)}
-            className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
-              tool === t.id
-                ? 'bg-blue-100 text-blue-700'
-                : 'text-gray-700 hover:bg-gray-100'
-            }`}
-            title={t.label}
-          >
-            <span className="text-base">{t.icon}</span>
-          </button>
-        ))}
+        {tools.map(t => {
+          const Icon = t.Icon;
+          return (
+            <button
+              key={t.id}
+              onClick={() => onToolChange(t.id)}
+              className={`px-3 py-2 rounded-full text-sm font-medium transition-colors ${
+                tool === t.id
+                  ? 'bg-blue-100 text-blue-700'
+                  : 'text-gray-700 hover:bg-gray-100'
+              }`}
+              title={t.label}
+            >
+              <Icon className="h-5 w-5" />
+            </button>
+          );
+        })}
         <div className="w-px h-6 bg-gray-300 mx-1" />
         <button
           onClick={onUndo}
@@ -203,7 +215,7 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
           }`}
           title="Undo"
         >
-          ↶
+          <ArrowUturnLeftIconOutline className="h-5 w-5" />
         </button>
         <button
           onClick={onRedo}
@@ -213,7 +225,7 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
           }`}
           title="Redo"
         >
-          ↷
+          <ArrowUturnRightIconOutline className="h-5 w-5" />
         </button>
       </div>
     </div>
@@ -427,14 +439,24 @@ export default function Exploration1() {
     isPanning.current = false;
   }, []);
 
-  // Handle wheel zoom
+  // Handle wheel zoom (including pinch zoom on trackpad)
   const handleWheel = useCallback((e) => {
     e.preventDefault();
+    e.stopPropagation();
     const rect = svgRef.current.getBoundingClientRect();
     const screenX = e.clientX - rect.left;
     const screenY = e.clientY - rect.top;
 
-    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    // Support pinch zoom on trackpad (e.ctrlKey indicates pinch gesture)
+    let zoomFactor;
+    if (e.ctrlKey || e.metaKey) {
+      // Pinch zoom - use deltaY directly
+      zoomFactor = 1 - (e.deltaY * 0.01);
+    } else {
+      // Regular scroll zoom
+      zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+    }
+    
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
 
     // Zoom towards mouse position
@@ -498,8 +520,24 @@ export default function Exploration1() {
 
   return (
     <Layout>
-      <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8" style={{ backgroundColor: '#f5f6f6', height: '100%', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+      <div 
+        className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8" 
+        style={{ 
+          backgroundColor: '#f5f6f6', 
+          height: '100%', 
+          position: 'relative', 
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+        onWheel={(e) => {
+          // Prevent page scrolling when interacting with canvas
+          if (e.target.closest('svg')) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <div style={{ width: '100%', flex: 1, position: 'relative', overflow: 'hidden' }}>
           <svg
             ref={svgRef}
             width="100%"
@@ -509,6 +547,7 @@ export default function Exploration1() {
               backgroundImage: 'radial-gradient(circle, #ddd 1px, transparent 1px)',
               backgroundSize: '20px 20px',
               cursor: state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
+              touchAction: 'none',
             }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
