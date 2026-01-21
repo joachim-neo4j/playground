@@ -215,11 +215,12 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
             <button
               key={t.id}
               onClick={() => onToolChange(t.id)}
-              className={`px-2 py-1.5 rounded transition-colors ${
+              className={`rounded transition-colors flex items-center justify-center ${
                 tool === t.id
                   ? 'bg-gray-200'
                   : 'hover:bg-gray-100'
               }`}
+              style={{ width: '32px', height: '32px', padding: 0 }}
               title={t.label}
             >
               <Icon className="h-5 w-5" style={{ color: '#4b5563' }} />
@@ -230,9 +231,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
         <button
           onClick={onUndo}
           disabled={!canUndo}
-          className={`px-2 py-1.5 rounded transition-colors ${
+          className={`rounded transition-colors flex items-center justify-center ${
             canUndo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
+          style={{ width: '32px', height: '32px', padding: 0 }}
           title="Undo"
         >
           <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af' }} />
@@ -240,9 +242,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
         <button
           onClick={onRedo}
           disabled={!canRedo}
-          className={`px-2 py-1.5 rounded transition-colors ${
+          className={`rounded transition-colors flex items-center justify-center ${
             canRedo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
+          style={{ width: '32px', height: '32px', padding: 0 }}
           title="Redo"
         >
           <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af' }} />
