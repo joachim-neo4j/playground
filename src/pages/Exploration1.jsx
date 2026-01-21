@@ -454,7 +454,7 @@ export default function Exploration1() {
         y: world.y - dragStart.current.y,
       });
     }
-  }, [isPanning.current, isDragging.current, dragObjectId.current, state.viewport, screenToWorld]);
+  }, [state.viewport, screenToWorld]);
 
   // Handle pointer up
   const handlePointerUp = useCallback(() => {
