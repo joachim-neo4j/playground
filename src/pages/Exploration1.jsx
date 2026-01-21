@@ -1008,25 +1008,26 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           height={obj.height}
           fill="none"
           stroke="#3B82F6"
-          strokeWidth={2}
-          strokeDasharray="4 4"
+          strokeWidth={2 / viewport.zoom}
+          strokeDasharray={`${4 / viewport.zoom} ${4 / viewport.zoom}`}
           rx={6}
           ry={6}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       
       {/* Resize handles */}
       {isSelected && !isEditing && onResizeHandleDown && (
-        <>
+        <g transform={`scale(${1 / viewport.zoom})`}>
           {/* Top-left */}
           <rect
-            x={-handleSize / 2}
-            y={-handleSize / 2}
-            width={handleSize}
-            height={handleSize}
+            x={-handleSize / 2 * viewport.zoom}
+            y={-handleSize / 2 * viewport.zoom}
+            width={handleSize * viewport.zoom}
+            height={handleSize * viewport.zoom}
             fill="#3B82F6"
             stroke="#ffffff"
-            strokeWidth={1}
+            strokeWidth={1 * viewport.zoom}
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1035,13 +1036,13 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
           {/* Top-right */}
           <rect
-            x={obj.width - handleSize / 2}
-            y={-handleSize / 2}
-            width={handleSize}
-            height={handleSize}
+            x={(obj.width - handleSize / 2) * viewport.zoom}
+            y={-handleSize / 2 * viewport.zoom}
+            width={handleSize * viewport.zoom}
+            height={handleSize * viewport.zoom}
             fill="#3B82F6"
             stroke="#ffffff"
-            strokeWidth={1}
+            strokeWidth={1 * viewport.zoom}
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1050,13 +1051,13 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
           {/* Bottom-left */}
           <rect
-            x={-handleSize / 2}
-            y={obj.height - handleSize / 2}
-            width={handleSize}
-            height={handleSize}
+            x={-handleSize / 2 * viewport.zoom}
+            y={(obj.height - handleSize / 2) * viewport.zoom}
+            width={handleSize * viewport.zoom}
+            height={handleSize * viewport.zoom}
             fill="#3B82F6"
             stroke="#ffffff"
-            strokeWidth={1}
+            strokeWidth={1 * viewport.zoom}
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1065,20 +1066,20 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
           {/* Bottom-right */}
           <rect
-            x={obj.width - handleSize / 2}
-            y={obj.height - handleSize / 2}
-            width={handleSize}
-            height={handleSize}
+            x={(obj.width - handleSize / 2) * viewport.zoom}
+            y={(obj.height - handleSize / 2) * viewport.zoom}
+            width={handleSize * viewport.zoom}
+            height={handleSize * viewport.zoom}
             fill="#3B82F6"
             stroke="#ffffff"
-            strokeWidth={1}
+            strokeWidth={1 * viewport.zoom}
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
               onResizeHandleDown(e, 'se');
             }}
           />
-        </>
+        </g>
       )}
       {/* Text or editable textarea */}
       {isEditing ? (
@@ -1135,7 +1136,7 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   );
 }
 
-function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
+function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown, viewport }) {
   const handleSize = 8;
 
   return (
@@ -1163,12 +1164,13 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
           stroke="#3B82F6"
           strokeWidth={2}
           strokeDasharray="4 4"
+          vectorEffect="non-scaling-stroke"
         />
       )}
       
       {/* Resize handles */}
       {isSelected && onResizeHandleDown && (
-        <>
+        <g transform={`scale(${1})`} style={{ transform: `scale(${1})` }}>
           {/* Top-left */}
           <rect
             x={-handleSize / 2}
@@ -1178,6 +1180,7 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1193,6 +1196,7 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1208,6 +1212,7 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1223,13 +1228,14 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
               onResizeHandleDown(e, 'se');
             }}
           />
-        </>
+        </g>
       )}
     </g>
   );
@@ -1349,6 +1355,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           fill="none"
           stroke="#3B82F6"
           strokeWidth={2}
+          vectorEffect="non-scaling-stroke"
         />
       )}
       
@@ -1364,6 +1371,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1379,6 +1387,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1394,6 +1403,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nesw-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
@@ -1409,6 +1419,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             fill="#3B82F6"
             stroke="#ffffff"
             strokeWidth={1}
+            vectorEffect="non-scaling-stroke"
             style={{ cursor: 'nwse-resize' }}
             onPointerDown={(e) => {
               e.stopPropagation();
