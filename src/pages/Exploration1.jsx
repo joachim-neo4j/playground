@@ -456,15 +456,43 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 }
 
 // Object Components
-function StickyNote({ obj, isSelected, onPointerDown }) {
+function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport }) {
   // FigJam-style sticky note with shadow and better styling
   const shadowOffset = 3;
-  
+  const inputRef = React.useRef(null);
+  const [inputValue, setInputValue] = React.useState(obj.text || '');
+
+  React.useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  React.useEffect(() => {
+    setInputValue(obj.text || '');
+  }, [obj.text]);
+
+  const handleBlur = () => {
+    onUpdate(inputValue);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      inputRef.current?.blur(); // This will trigger handleBlur
+    } else if (e.key === 'Escape') {
+      setInputValue(obj.text || '');
+      onUpdate(null); // Cancel editing
+    }
+  };
+
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
-      onPointerDown={onPointerDown}
-      style={{ cursor: 'move' }}
+      onPointerDown={isEditing ? undefined : onPointerDown}
+      onDoubleClick={isEditing ? undefined : onDoubleClick}
+      style={{ cursor: isEditing ? 'text' : 'move' }}
     >
       <defs>
         <filter id={`shadow-${obj.id}`} x="-50%" y="-50%" width="200%" height="200%">
@@ -490,24 +518,50 @@ function StickyNote({ obj, isSelected, onPointerDown }) {
         ry={8}
         filter={!isSelected ? `url(#shadow-${obj.id})` : undefined}
       />
-      {/* Text with better padding and styling */}
-      {obj.text && (
+      {/* Text or editable textarea */}
+      {isEditing ? (
         <foreignObject x={12} y={12} width={obj.width - 24} height={obj.height - 24}>
-          <div
+          <textarea
+            ref={inputRef}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
             style={{
               fontSize: '14px',
               color: '#1a1a1a',
               fontFamily: 'inherit',
               lineHeight: '1.4',
-              wordWrap: 'break-word',
-              whiteSpace: 'pre-wrap',
-              pointerEvents: 'none',
-              userSelect: 'none',
+              width: '100%',
+              height: '100%',
+              border: 'none',
+              outline: 'none',
+              backgroundColor: 'transparent',
+              resize: 'none',
+              padding: 0,
+              margin: 0,
             }}
-          >
-            {obj.text}
-          </div>
+          />
         </foreignObject>
+      ) : (
+        obj.text && (
+          <foreignObject x={12} y={12} width={obj.width - 24} height={obj.height - 24}>
+            <div
+              style={{
+                fontSize: '14px',
+                color: '#1a1a1a',
+                fontFamily: 'inherit',
+                lineHeight: '1.4',
+                wordWrap: 'break-word',
+                whiteSpace: 'pre-wrap',
+                pointerEvents: 'none',
+                userSelect: 'none',
+              }}
+            >
+              {obj.text}
+            </div>
+          </foreignObject>
+        )
       )}
     </g>
   );
@@ -898,8 +952,7 @@ export default function Exploration1() {
   // Handle object pointer down
   const handleObjectPointerDown = useCallback((e, objId) => {
     if (state.tool !== 'select') return;
-    const obj = state.objects.find(o => o.id === objId);
-    if (state.editingTextId === objId || (obj && (obj.type === 'text' || obj.type === 'sticky') && state.editingTextId === objId)) {
+    if (state.editingTextId === objId) {
       e.stopPropagation();
       return; // Don't start dragging if editing
     }
@@ -931,7 +984,7 @@ export default function Exploration1() {
       dispatch({ type: ActionTypes.SELECT_OBJECT, id: objId });
       dispatch({ type: ActionTypes.START_EDIT_TEXT, id: objId });
     }
-  }, [state.tool, state.objects]);
+  }, [state.tool, state.objects, state.editingTextId]);
 
   // Handle text update
   const handleTextUpdate = useCallback((objId, newText) => {
