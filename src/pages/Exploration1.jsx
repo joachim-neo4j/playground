@@ -1164,6 +1164,19 @@ export default function Exploration1() {
     };
   }, []);
 
+  // Prevent scrolling on the parent main content area
+  useEffect(() => {
+    const mainElement = containerRef.current?.closest('main');
+    if (mainElement) {
+      const originalOverflow = mainElement.style.overflow;
+      mainElement.style.overflow = 'hidden';
+      
+      return () => {
+        mainElement.style.overflow = originalOverflow;
+      };
+    }
+  }, []);
+
   return (
     <Layout>
       <div 
