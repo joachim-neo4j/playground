@@ -1,4 +1,4 @@
-import { useReducer, useRef, useCallback, useEffect } from 'react';
+import React, { useReducer, useRef, useCallback, useEffect } from 'react';
 import Layout from '../components/Layout';
 import {
   CursorArrowRaysIconOutline,
@@ -178,6 +178,10 @@ function whiteboardReducer(state, action) {
 
 // Toolbar Component
 function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
+  const [hoveredButton, setHoveredButton] = React.useState(null);
+  const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
+  const buttonRefs = React.useRef({});
+
   const SelectIcon = () => (
     <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
       <path d="M16.3229 22.0811L11.9385 14.4876M11.9385 14.4876L8.6037 19.5387L5.09035 2.62536L17.9807 14.1249L11.9385 14.4876Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
@@ -198,60 +202,116 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
     { id: 'hand', label: 'Hand', Icon: HandRaisedIconOutline },
   ];
 
+  const handleMouseEnter = (buttonId, label) => (e) => {
+    setHoveredButton(buttonId);
+    const rect = e.currentTarget.getBoundingClientRect();
+    setTooltipPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top - 8, // Position above the button
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredButton(null);
+  };
+
   return (
-    <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-50">
-      <div 
-        className="rounded-lg border flex items-center gap-0.5 px-1 py-1"
-        style={{
-          backgroundColor: '#ffffff',
-          borderColor: '#d1d5db',
-          borderWidth: '1px',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        }}
-      >
-        {tools.map(t => {
-          const Icon = t.Icon;
-          return (
-            <button
-              key={t.id}
-              onClick={() => onToolChange(t.id)}
-              className={`toolbar-button rounded transition-colors flex items-center justify-center ${
-                tool === t.id
-                  ? 'toolbar-button-selected'
-                  : ''
-              }`}
-              style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-              title={t.label}
-            >
-              <Icon className="h-5 w-5" style={{ color: '#4b5563', display: 'block' }} />
-            </button>
-          );
-        })}
-        <div className="w-px h-6 mx-0.5" style={{ backgroundColor: '#d1d5db' }} />
-        <button
-          onClick={onUndo}
-          disabled={!canUndo}
-          className={`toolbar-button rounded transition-colors flex items-center justify-center ${
-            canUndo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
-          }`}
-          style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          title="Undo"
+    <>
+      {hoveredButton && (
+        <div
+          className="toolbar-tooltip"
+          style={{
+            position: 'fixed',
+            left: `${tooltipPosition.x}px`,
+            top: `${tooltipPosition.y}px`,
+            transform: 'translate(-50%, -100%)',
+            backgroundColor: '#1f2937',
+            color: '#ffffff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            fontSize: '12px',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 10000,
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
         >
-          <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af', display: 'block' }} />
-        </button>
-        <button
-          onClick={onRedo}
-          disabled={!canRedo}
-          className={`toolbar-button rounded transition-colors flex items-center justify-center ${
-            canRedo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
-          }`}
-          style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-          title="Redo"
+          {hoveredButton === 'undo' ? 'Undo' : hoveredButton === 'redo' ? 'Redo' : tools.find(t => t.id === hoveredButton)?.label}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '-4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: 0,
+              height: 0,
+              borderLeft: '4px solid transparent',
+              borderRight: '4px solid transparent',
+              borderTop: '4px solid #1f2937',
+            }}
+          />
+        </div>
+      )}
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-50">
+        <div 
+          className="rounded-lg border flex items-center gap-0.5 px-1 py-1"
+          style={{
+            backgroundColor: '#ffffff',
+            borderColor: '#d1d5db',
+            borderWidth: '1px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+          }}
         >
-          <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af', display: 'block' }} />
-        </button>
+          {tools.map(t => {
+            const Icon = t.Icon;
+            return (
+              <button
+                key={t.id}
+                ref={(el) => (buttonRefs.current[t.id] = el)}
+                onClick={() => onToolChange(t.id)}
+                onMouseEnter={handleMouseEnter(t.id, t.label)}
+                onMouseLeave={handleMouseLeave}
+                className={`toolbar-button rounded transition-colors flex items-center justify-center ${
+                  tool === t.id
+                    ? 'toolbar-button-selected'
+                    : ''
+                }`}
+                style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <Icon className="h-5 w-5" style={{ color: '#4b5563', display: 'block' }} />
+              </button>
+            );
+          })}
+          <div className="w-px h-6 mx-0.5" style={{ backgroundColor: '#d1d5db' }} />
+          <button
+            ref={(el) => (buttonRefs.current['undo'] = el)}
+            onClick={onUndo}
+            disabled={!canUndo}
+            onMouseEnter={handleMouseEnter('undo', 'Undo')}
+            onMouseLeave={handleMouseLeave}
+            className={`toolbar-button rounded transition-colors flex items-center justify-center ${
+              canUndo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
+            }`}
+            style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af', display: 'block' }} />
+          </button>
+          <button
+            ref={(el) => (buttonRefs.current['redo'] = el)}
+            onClick={onRedo}
+            disabled={!canRedo}
+            onMouseEnter={handleMouseEnter('redo', 'Redo')}
+            onMouseLeave={handleMouseLeave}
+            className={`toolbar-button rounded transition-colors flex items-center justify-center ${
+              canRedo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
+            }`}
+            style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af', display: 'block' }} />
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
