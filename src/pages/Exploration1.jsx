@@ -456,10 +456,19 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 }
 
 // Object Components
-function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport }) {
+function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef }) {
   // FigJam-style sticky note with shadow and better styling
   const shadowOffset = 3;
   const inputRef = React.useRef(null);
+  
+  // Share ref with parent
+  React.useEffect(() => {
+    if (textareaRef && isEditing) {
+      textareaRef.current = inputRef.current;
+    } else if (textareaRef) {
+      textareaRef.current = null;
+    }
+  }, [isEditing, textareaRef]);
   const [inputValue, setInputValue] = React.useState(obj.text || '');
 
   React.useEffect(() => {
@@ -585,8 +594,17 @@ function Rectangle({ obj, isSelected, onPointerDown }) {
   );
 }
 
-function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport }) {
+function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef }) {
   const inputRef = React.useRef(null);
+  
+  // Share ref with parent
+  React.useEffect(() => {
+    if (textareaRef && isEditing) {
+      textareaRef.current = inputRef.current;
+    } else if (textareaRef) {
+      textareaRef.current = null;
+    }
+  }, [isEditing, textareaRef]);
   const [inputValue, setInputValue] = React.useState(obj.text || 'Text');
 
   React.useEffect(() => {
@@ -665,7 +683,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   );
 }
 
-function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport) {
+function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef) {
   switch (obj.type) {
     case 'sticky':
       return (
@@ -678,6 +696,7 @@ function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           onDoubleClick={onDoubleClick}
           onUpdate={onUpdate}
           viewport={viewport}
+          textareaRef={textareaRef}
         />
       );
     case 'rectangle':
@@ -693,6 +712,7 @@ function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           onDoubleClick={onDoubleClick}
           onUpdate={onUpdate}
           viewport={viewport}
+          textareaRef={textareaRef}
         />
       );
     default:
@@ -741,8 +761,7 @@ export default function Exploration1() {
     }
 
     if (state.tool === 'select') {
-      // If editing a sticky note or text, stop editing when clicking outside
-      // The blur handler will save the text automatically
+      // If editing a sticky note or text, save it when clicking outside
       if (state.editingTextId) {
         const editingObj = state.objects.find(o => o.id === state.editingTextId);
         if (editingObj && (editingObj.type === 'sticky' || editingObj.type === 'text')) {
@@ -754,11 +773,10 @@ export default function Exploration1() {
             world.y <= editingObj.y + editingObj.height
           );
           if (!isClickInside) {
-            // Blur will be triggered automatically, but ensure we stop editing
-            // Use setTimeout to let blur handler fire first
-            setTimeout(() => {
-              dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
-            }, 0);
+            // Blur the textarea to trigger save
+            if (editingTextareaRef.current) {
+              editingTextareaRef.current.blur();
+            }
           }
         }
       }
@@ -1023,6 +1041,9 @@ export default function Exploration1() {
     dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
   }, []);
 
+  // Ref to track editing textarea elements
+  const editingTextareaRef = useRef(null);
+
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -1192,7 +1213,8 @@ export default function Exploration1() {
                   (e) => handleObjectPointerDown(e, obj.id),
                   (e) => handleTextDoubleClick(e, obj.id),
                   (newText) => handleTextUpdate(obj.id, newText),
-                  state.viewport
+                  state.viewport,
+                  editingTextareaRef
                 )
               )}
             </g>
