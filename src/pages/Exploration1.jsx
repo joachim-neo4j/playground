@@ -977,7 +977,7 @@ export default function Exploration1() {
     const rect = svgRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const zoomFactor = 1.2;
+    const zoomFactor = 1.1; // 10% increase
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
     
     const worldBefore = screenToWorld(centerX, centerY);
@@ -998,7 +998,7 @@ export default function Exploration1() {
     const rect = svgRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const zoomFactor = 0.8;
+    const zoomFactor = 0.9; // 10% decrease
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
     
     const worldBefore = screenToWorld(centerX, centerY);
