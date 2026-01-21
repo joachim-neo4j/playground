@@ -13,6 +13,7 @@ import Dashboards from './pages/Dashboards';
 import Operations from './pages/Operations';
 import Project from './pages/Project';
 import Learning from './pages/Learning';
+import Exploration1 from './pages/Exploration1';
 import Debug from './pages/Debug';
 
 // Component to handle 404.html redirect format
@@ -55,9 +56,10 @@ function App() {
         <Route path="/query" element={<Query />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/dashboards" element={<Dashboards />} />
-        <Route path="/operations" element={<Operations />} />
-        <Route path="/project" element={<Project />} />
-        <Route path="/learning" element={<Learning />} />
+            <Route path="/operations" element={<Operations />} />
+            <Route path="/project" element={<Project />} />
+            <Route path="/learning" element={<Learning />} />
+            <Route path="/playground/exploration-1" element={<Exploration1 />} />
         <Route path="/debug" element={<Debug />} />
       </Routes>
     </BrowserRouter>

@@ -28,6 +28,10 @@ export default function Sidebar() {
       '/learning': 'learning',
       '/debug': 'debug',
     };
+    // Check if we're on a playground exploration page
+    if (location.pathname.startsWith('/playground/')) {
+      return page === 'playground' ? 'bg-neo-blue-light text-neo-blue' : 'text-gray-700 hover:bg-gray-100';
+    }
     const currentPage = pageMap[location.pathname] || 'get-started';
     return currentPage === page ? 'bg-neo-blue-light text-neo-blue' : 'text-gray-700 hover:bg-gray-100';
   };
@@ -80,7 +84,7 @@ export default function Sidebar() {
                 onMouseEnter={() => setShowPlaygroundMenu(true)}
                 onMouseLeave={() => setShowPlaygroundMenu(false)}
               >
-                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</div>
+                <Link to="/playground/exploration-1" className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</Link>
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 2</div>
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 4</div>
