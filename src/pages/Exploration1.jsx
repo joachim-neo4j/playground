@@ -731,7 +731,7 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                   }}
                   title="Font size"
                 >
-                  <span style={{ fontSize: '12px', fontWeight: 500 }}>
+                  <span style={{ fontSize: '12px', fontWeight: 400 }}>
                     {obj.fontSize || 16}px
                   </span>
                 </button>
@@ -1077,7 +1077,7 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             style={{
-              fontSize: '14px',
+              fontSize: `${obj.fontSize || 14}px`,
               color: '#374151', // Dark gray text like the image
               fontFamily: 'inherit',
               lineHeight: '1.5',
@@ -1100,7 +1100,7 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           <foreignObject x={16} y={16} width={obj.width - 32} height={obj.height - 32}>
             <div
               style={{
-                fontSize: '14px',
+                fontSize: `${obj.fontSize || 14}px`,
                 color: '#374151', // Dark gray text like the image
                 fontFamily: 'inherit',
                 lineHeight: '1.5',
