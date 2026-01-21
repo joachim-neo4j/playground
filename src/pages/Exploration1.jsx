@@ -756,10 +756,21 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                           onFontSizeChange(size);
                           setShowFontSizePicker(false);
                         }}
-                        className="block w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded cursor-pointer"
+                        className="block w-full text-left px-2 py-1 text-sm rounded cursor-pointer"
                         style={{
+                          color: '#4d5157',
                           backgroundColor: obj.fontSize === size ? '#e5e7eb' : 'transparent',
                           fontWeight: obj.fontSize === size ? 600 : 400,
+                        }}
+                        onMouseEnter={(e) => {
+                          if (obj.fontSize !== size) {
+                            e.currentTarget.style.backgroundColor = '#f3f4f6';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (obj.fontSize !== size) {
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                          }
                         }}
                       >
                         {size}px
