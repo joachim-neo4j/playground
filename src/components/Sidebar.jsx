@@ -29,7 +29,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="hidden lg:block border-r bg-white min-h-[calc(100vh-7rem)]" style={{ width: '194px' }}>
+    <aside className="hidden lg:block border-r bg-white fixed top-12 left-0 bottom-0 overflow-y-auto" style={{ width: '194px' }}>
       <nav className="px-2 pt-6 pb-2" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
         {/* Top Section */}
         <div className="mb-4">

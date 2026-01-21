@@ -8,7 +8,7 @@ export default function Layout({ children }) {
       <Header />
       <div className="flex flex-1 min-h-0">
         <Sidebar />
-        <main className="flex-1 bg-content-area overflow-auto">
+        <main className="flex-1 bg-content-area overflow-auto ml-[194px] lg:ml-[194px]">
           <StatusBar />
           {children}
         </main>
