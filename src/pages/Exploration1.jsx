@@ -620,8 +620,10 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
 
       // Formatting icons
       const BoldIcon = () => (
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12h6.75m-6.75 0V9.75m0 0h6.75m-6.75 0h-1.5a3.75 3.75 0 0 0 0 7.5h1.5m6.75-7.5V12m0 0v2.25m0-2.25h-1.5m1.5 0h6.75m-6.75 0v2.25m0-2.25h-1.5a3.75 3.75 0 0 0 0-7.5h1.5" />
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+          <path d="M6.5 19.4987H13C14.1935 19.4987 15.3381 19.0246 16.182 18.1806C17.0259 17.3367 17.5 16.1921 17.5 14.9987C17.5 13.8052 17.0259 12.6606 16.182 11.8167C15.3381 10.9728 14.1935 10.4987 13 10.4987H13.5C13.894 10.4987 14.2841 10.4211 14.6481 10.2703C15.012 10.1195 15.3427 9.89855 15.6213 9.61998C15.8999 9.3414 16.1209 9.01068 16.2716 8.64671C16.4224 8.28273 16.5 7.89262 16.5 7.49866C16.5 7.10469 16.4224 6.71458 16.2716 6.35061C16.1209 5.98663 15.8999 5.65591 15.6213 5.37734C15.3427 5.09876 15.012 4.87778 14.6481 4.72702C14.2841 4.57625 13.894 4.49866 13.5 4.49866H6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+          <path d="M8.5 4.49866V19.4987" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+          <path d="M13 10.4987H8.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
         </svg>
       );
 
