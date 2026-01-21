@@ -1087,13 +1087,13 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   React.useEffect(() => {
     if (!isEditing && textMeasureRef.current) {
       const measureDiv = textMeasureRef.current;
-      const bounds = measureDiv.getBoundingClientRect();
+      // Use scrollWidth and scrollHeight for accurate text measurement
       setTextBounds({
-        width: bounds.width,
-        height: bounds.height,
+        width: measureDiv.scrollWidth,
+        height: measureDiv.scrollHeight,
       });
     }
-  }, [obj.text, obj.fontSize, isEditing]);
+  }, [obj.text, obj.fontSize, isEditing, viewport.zoom]);
 
   const handleBlur = () => {
     onUpdate(inputValue);
