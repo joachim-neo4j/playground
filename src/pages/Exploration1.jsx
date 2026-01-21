@@ -232,10 +232,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
         <button
           onClick={onUndo}
           disabled={!canUndo}
-          className={`rounded transition-colors flex items-center justify-center ${
+          className={`toolbar-button rounded transition-colors flex items-center justify-center ${
             canUndo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
-          style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           title="Undo"
         >
           <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af', display: 'block' }} />
@@ -243,10 +243,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
         <button
           onClick={onRedo}
           disabled={!canRedo}
-          className={`rounded transition-colors flex items-center justify-center ${
+          className={`toolbar-button rounded transition-colors flex items-center justify-center ${
             canRedo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
-          style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           title="Redo"
         >
           <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af', display: 'block' }} />
