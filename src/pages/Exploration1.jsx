@@ -1524,6 +1524,7 @@ function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           isSelected={isSelected}
           onPointerDown={onPointerDown}
           onResizeHandleDown={onResizeHandleDown}
+          viewport={viewport}
         />
       );
     case 'text':
