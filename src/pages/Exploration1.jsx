@@ -411,7 +411,7 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
           />
         </div>
       )}
-      <div className="absolute bottom-12 right-12 z-50">
+      <div className="absolute bottom-12 right-4 z-50">
         <div 
           className="rounded-lg border flex items-center gap-0.5 px-1 py-1"
           style={{
