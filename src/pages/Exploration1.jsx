@@ -728,6 +728,7 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                     minWidth: '48px',
                     height: '32px',
                     padding: '6px 8px',
+                    fontWeight: '400 !important',
                   }}
                   title="Font size"
                 >
@@ -737,12 +738,14 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                 </button>
                 {showFontSizePicker && (
                   <div
-                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 rounded-lg border p-2 max-h-64 overflow-y-auto"
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 rounded-lg border p-2 overflow-y-auto"
                     style={{
                       backgroundColor: '#ffffff',
                       borderColor: '#d1d5db',
                       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
                       minWidth: '80px',
+                      maxHeight: '200px',
+                      overflowY: 'auto',
                     }}
                     onClick={(e) => e.stopPropagation()}
                   >
