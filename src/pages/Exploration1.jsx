@@ -784,65 +784,69 @@ export default function Exploration1() {
 
   // Handle touch move
   const handleTouchMove = useCallback((e) => {
-    if (e.touches.length === 2 && touchState.current.isPinching) {
+    if (e.touches.length === 2) {
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
       const distance = getTouchDistance(touch1, touch2);
       const center = getTouchCenter(touch1, touch2);
       
-      const rect = svgRef.current.getBoundingClientRect();
-      const screenX = center.x - rect.left;
-      const screenY = center.y - rect.top;
+      // Determine if this is a pinch (distance changing significantly) or pan (distance relatively constant)
+      const distanceChange = Math.abs(distance - touchState.current.lastDistance);
+      const distanceChangePercent = touchState.current.lastDistance > 0 
+        ? (distanceChange / touchState.current.lastDistance) * 100 
+        : 0;
       
-      // Calculate zoom factor
-      const distanceDelta = distance - touchState.current.lastDistance;
-      const zoomFactor = 1 + (distanceDelta * 0.01);
-      const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
+      // If distance changes by more than 5%, treat it as a pinch/zoom gesture
+      const isPinching = distanceChangePercent > 5;
       
-      // Zoom towards the center point between the two touches
-      const worldBefore = screenToWorld(screenX, screenY);
-      const newX = screenX - worldBefore.x * newZoom;
-      const newY = screenY - worldBefore.y * newZoom;
-      
-      // Also handle pan if center moved
-      const centerDeltaX = center.x - touchState.current.lastCenter.x;
-      const centerDeltaY = center.y - touchState.current.lastCenter.y;
-      
-      dispatch({
-        type: ActionTypes.SET_VIEWPORT,
-        viewport: {
-          x: newX + centerDeltaX,
-          y: newY + centerDeltaY,
-          zoom: newZoom,
-        },
-      });
-      
-      touchState.current.lastDistance = distance;
-      touchState.current.lastCenter = center;
-      
-      e.preventDefault();
-    } else if (e.touches.length === 2 && !touchState.current.isPinching) {
-      // Two finger pan (without zoom)
-      const touch1 = e.touches[0];
-      const touch2 = e.touches[1];
-      const center = getTouchCenter(touch1, touch2);
-      
-      if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
-        const dx = center.x - touchState.current.lastCenter.x;
-        const dy = center.y - touchState.current.lastCenter.y;
+      if (isPinching) {
+        // Pinch to zoom
+        const rect = svgRef.current.getBoundingClientRect();
+        const screenX = center.x - rect.left;
+        const screenY = center.y - rect.top;
+        
+        // Calculate zoom factor based on distance change
+        const distanceDelta = distance - touchState.current.lastDistance;
+        const zoomFactor = 1 + (distanceDelta * 0.01);
+        const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
+        
+        // Zoom towards the center point between the two touches
+        const worldBefore = screenToWorld(screenX, screenY);
+        const newX = screenX - worldBefore.x * newZoom;
+        const newY = screenY - worldBefore.y * newZoom;
         
         dispatch({
           type: ActionTypes.SET_VIEWPORT,
           viewport: {
-            x: state.viewport.x + dx,
-            y: state.viewport.y + dy,
-            zoom: state.viewport.zoom,
+            x: newX,
+            y: newY,
+            zoom: newZoom,
           },
         });
+        
+        touchState.current.isPinching = true;
+      } else {
+        // Two finger pan (distance relatively constant)
+        if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
+          const dx = center.x - touchState.current.lastCenter.x;
+          const dy = center.y - touchState.current.lastCenter.y;
+          
+          dispatch({
+            type: ActionTypes.SET_VIEWPORT,
+            viewport: {
+              x: state.viewport.x + dx,
+              y: state.viewport.y + dy,
+              zoom: state.viewport.zoom,
+            },
+          });
+        }
+        
+        touchState.current.isTwoFingerPan = true;
+        touchState.current.isPinching = false;
       }
       
+      touchState.current.lastDistance = distance;
       touchState.current.lastCenter = center;
-      touchState.current.isTwoFingerPan = true;
       
       e.preventDefault();
     }
