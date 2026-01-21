@@ -6,6 +6,7 @@ export default function Sidebar() {
   const location = useLocation();
   const activePage = location.pathname.replace('/', '') || 'get-started';
   const [showPlaygroundMenu, setShowPlaygroundMenu] = useState(false);
+  const [playgroundMenuPosition, setPlaygroundMenuPosition] = useState(null);
   
   const isActive = (page) => {
     const pageMap = {
@@ -46,7 +47,11 @@ export default function Sidebar() {
             </Link>
             <div 
               className="relative"
-              onMouseEnter={() => setShowPlaygroundMenu(true)}
+              onMouseEnter={(e) => {
+                setShowPlaygroundMenu(true);
+                const rect = e.currentTarget.getBoundingClientRect();
+                setPlaygroundMenuPosition({ top: rect.top, left: rect.right + 4 });
+              }}
               onMouseLeave={() => setShowPlaygroundMenu(false)}
             >
               <div className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('playground')}`} style={{ height: '32px', cursor: 'pointer' }}>
@@ -58,16 +63,21 @@ export default function Sidebar() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
                 </svg>
               </div>
-              {showPlaygroundMenu && (
-                <div className="absolute left-full top-0 ml-1 bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1">
-                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</div>
-                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 2</div>
-                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
-                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 4</div>
-                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 5</div>
-                </div>
-              )}
             </div>
+            {showPlaygroundMenu && playgroundMenuPosition && (
+              <div 
+                className="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1"
+                style={{ top: `${playgroundMenuPosition.top}px`, left: `${playgroundMenuPosition.left}px` }}
+                onMouseEnter={() => setShowPlaygroundMenu(true)}
+                onMouseLeave={() => setShowPlaygroundMenu(false)}
+              >
+                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</div>
+                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 2</div>
+                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
+                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 4</div>
+                <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 5</div>
+              </div>
+            )}
           </div>
         </div>
 
