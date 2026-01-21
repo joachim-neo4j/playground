@@ -220,7 +220,7 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
                   ? 'bg-gray-200'
                   : 'hover:bg-gray-100'
               }`}
-              style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title={t.label}
             >
               <Icon className="h-5 w-5" style={{ color: '#4b5563', display: 'block' }} />
