@@ -767,7 +767,7 @@ export default function Exploration1() {
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
-        sticky: '#E8F5E9', // Light green color like the image
+        sticky: '#D4EDDA', // Light green color matching the screenshot
         rectangle: '#2196F3',
         text: '#000000',
       };
