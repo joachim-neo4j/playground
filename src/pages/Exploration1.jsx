@@ -551,10 +551,11 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 }
 
 // Floating Toolbar Component (appears above selected items)
-function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColorChange, onBringToFront, onSendToBack, onFormatChange }) {
+function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColorChange, onBringToFront, onSendToBack, onFormatChange, onFontSizeChange }) {
   const toolbarRef = React.useRef(null);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [showColorPicker, setShowColorPicker] = React.useState(false);
+  const [showFontSizePicker, setShowFontSizePicker] = React.useState(false);
 
   // Convert world coordinates to screen coordinates
   const worldToScreen = React.useCallback((worldX, worldY) => {
@@ -610,6 +611,12 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
 
       const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
       const supportsFormatting = ['sticky', 'text'].includes(obj.type);
+      
+      // Font size options: 8px to 64px with 4px steps
+      const fontSizes = [];
+      for (let i = 8; i <= 64; i += 4) {
+        fontSizes.push(i);
+      }
 
       // Formatting icons
       const BoldIcon = () => (
@@ -701,6 +708,60 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                 </button>
                 <div className="w-px h-6 bg-gray-200 mx-1"></div> {/* Separator */}
               </>
+            )}
+
+            {/* Font size dropdown for text and sticky notes */}
+            {supportsFormatting && (
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowFontSizePicker(!showFontSizePicker);
+                  }}
+                  className="toolbar-button rounded transition-colors flex items-center justify-center"
+                  style={{
+                    width: 'auto',
+                    minWidth: '48px',
+                    height: '32px',
+                    padding: '6px 8px',
+                  }}
+                  title="Font size"
+                >
+                  <span style={{ fontSize: '12px', fontWeight: 500 }}>
+                    {obj.fontSize || 16}px
+                  </span>
+                </button>
+                {showFontSizePicker && (
+                  <div
+                    className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 rounded-lg border p-2 max-h-64 overflow-y-auto"
+                    style={{
+                      backgroundColor: '#ffffff',
+                      borderColor: '#d1d5db',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                      minWidth: '80px',
+                    }}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {fontSizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onFontSizeChange(size);
+                          setShowFontSizePicker(false);
+                        }}
+                        className="w-full text-left px-2 py-1 text-sm hover:bg-gray-100 rounded"
+                        style={{
+                          backgroundColor: obj.fontSize === size ? '#e5e7eb' : 'transparent',
+                          fontWeight: obj.fontSize === size ? 600 : 400,
+                        }}
+                      >
+                        {size}px
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             )}
 
             {/* Color picker (circle) for sticky, rectangle, and text */}
