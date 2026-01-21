@@ -586,7 +586,7 @@ function Rectangle({ obj, isSelected, onPointerDown }) {
       <rect
         width={obj.width}
         height={obj.height}
-        fill="none"
+        fill={obj.color || '#FFFFFF'}
         stroke={isSelected ? '#3B82F6' : obj.color || '#000'}
         strokeWidth={2}
       />
