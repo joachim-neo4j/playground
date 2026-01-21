@@ -1,9 +1,11 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
   const location = useLocation();
   const activePage = location.pathname.replace('/', '') || 'get-started';
+  const [showPlaygroundMenu, setShowPlaygroundMenu] = useState(false);
   
   const isActive = (page) => {
     const pageMap = {
@@ -42,6 +44,30 @@ export default function Sidebar() {
               <CodeBracketIconOutline className="h-5 w-5" />
               <span>Developer hub</span>
             </Link>
+            <div 
+              className="relative"
+              onMouseEnter={() => setShowPlaygroundMenu(true)}
+              onMouseLeave={() => setShowPlaygroundMenu(false)}
+            >
+              <div className={`relative flex items-center space-x-3 rounded-md px-3 text-sm font-medium ${isActive('playground')}`} style={{ height: '32px', cursor: 'pointer' }}>
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5">
+                  <path d="M2 11.666H5.11125C5.37454 11.6661 5.63197 11.5882 5.85107 11.4421C6.07017 11.296 6.24113 11.0882 6.34242 10.8451L8.65363 5.40614C8.70642 5.28187 8.79565 5.17656 8.90954 5.10412C9.02343 5.03168 9.15661 4.99553 9.29147 5.00044C9.42634 5.00536 9.55654 5.05111 9.66486 5.13165C9.77318 5.21219 9.85452 5.32372 9.89813 5.45151L14.1063 18.5485C14.1499 18.6763 14.2313 18.7878 14.3396 18.8684C14.4479 18.9489 14.5781 18.9946 14.713 18.9996C14.8478 19.0045 14.981 18.9683 15.0949 18.8959C15.2088 18.8234 15.298 18.7181 15.3508 18.5939L17.6576 12.487C17.7589 12.2438 17.9298 12.0361 18.1489 11.89C18.368 11.7439 18.6255 11.6659 18.8888 11.666H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+                </svg>
+                <span className="flex-1">Playground</span>
+                <svg className="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+                </svg>
+              </div>
+              {showPlaygroundMenu && (
+                <div className="absolute left-full top-0 ml-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 min-w-[200px] py-1">
+                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 1</div>
+                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 2</div>
+                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
+                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 4</div>
+                  <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 5</div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
