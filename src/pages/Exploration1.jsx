@@ -756,8 +756,9 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                           onFontSizeChange(size);
                           setShowFontSizePicker(false);
                         }}
-                        className="block w-full text-left px-2 py-1 text-sm rounded cursor-pointer"
+                        className="block w-full text-left px-2 py-1 rounded cursor-pointer"
                         style={{
+                          fontSize: '12px',
                           color: '#4d5157',
                           backgroundColor: obj.fontSize === size ? '#e5e7eb' : 'transparent',
                           fontWeight: obj.fontSize === size ? 600 : 400,
