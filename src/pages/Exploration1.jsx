@@ -614,7 +614,18 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
 function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport) {
   switch (obj.type) {
     case 'sticky':
-      return <StickyNote key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
+      return (
+        <StickyNote
+          key={obj.id}
+          obj={obj}
+          isSelected={isSelected}
+          isEditing={isEditing}
+          onPointerDown={onPointerDown}
+          onDoubleClick={onDoubleClick}
+          onUpdate={onUpdate}
+          viewport={viewport}
+        />
+      );
     case 'rectangle':
       return <Rectangle key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
     case 'text':
@@ -702,7 +713,7 @@ export default function Exploration1() {
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
-        sticky: '#FFEB3B', // FigJam-style yellow
+        sticky: '#FFF9C4', // Softer yellow color
         rectangle: '#2196F3',
         text: '#000000',
       };
@@ -713,7 +724,7 @@ export default function Exploration1() {
         x: world.x,
         y: world.y,
         width: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 150 : 0,
-        height: state.tool === 'sticky' ? 100 : state.tool === 'rectangle' ? 100 : 0,
+        height: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 100 : 0, // Square for sticky
         text: state.tool === 'text' ? 'Text' : state.tool === 'sticky' ? 'Note' : '',
         color: colors[state.tool],
         fontSize: 16,
@@ -887,7 +898,8 @@ export default function Exploration1() {
   // Handle object pointer down
   const handleObjectPointerDown = useCallback((e, objId) => {
     if (state.tool !== 'select') return;
-    if (state.editingTextId === objId) {
+    const obj = state.objects.find(o => o.id === objId);
+    if (state.editingTextId === objId || (obj && (obj.type === 'text' || obj.type === 'sticky') && state.editingTextId === objId)) {
       e.stopPropagation();
       return; // Don't start dragging if editing
     }
@@ -909,13 +921,13 @@ export default function Exploration1() {
     }
   }, [state.tool, state.objects, state.editingTextId, screenToWorld]);
 
-  // Handle double-click on text object to start editing
+  // Handle double-click on text or sticky object to start editing
   const handleTextDoubleClick = useCallback((e, objId) => {
     if (state.tool !== 'select') return;
     e.stopPropagation();
     e.preventDefault();
     const obj = state.objects.find(o => o.id === objId);
-    if (obj && obj.type === 'text') {
+    if (obj && (obj.type === 'text' || obj.type === 'sticky')) {
       dispatch({ type: ActionTypes.SELECT_OBJECT, id: objId });
       dispatch({ type: ActionTypes.START_EDIT_TEXT, id: objId });
     }
