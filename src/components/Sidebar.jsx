@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
+import { CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
   const location = useLocation();
