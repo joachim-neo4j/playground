@@ -803,6 +803,9 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       inputRef.current?.blur(); // This will trigger handleBlur
+    } else if (e.key === 'Enter' && e.shiftKey) {
+      // Allow Shift+Enter to create a new line (default behavior for textarea)
+      // Don't prevent default, let the textarea handle it
     } else if (e.key === 'Escape') {
       setInputValue(obj.text || '');
       onUpdate(null); // Cancel editing
@@ -1145,6 +1148,9 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       inputRef.current?.blur(); // This will trigger handleBlur
+    } else if (e.key === 'Enter' && e.shiftKey) {
+      // Allow Shift+Enter to create a new line (default behavior for textarea)
+      // Don't prevent default, let the textarea handle it
     } else if (e.key === 'Escape') {
       setInputValue(obj.text || 'Text');
       onUpdate(null); // Cancel editing
