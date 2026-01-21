@@ -1071,7 +1071,8 @@ export default function Exploration1() {
             style={{
               background: '#f5f5f5',
               backgroundImage: 'radial-gradient(circle, #ddd 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
+              backgroundSize: `${20 * state.viewport.zoom}px ${20 * state.viewport.zoom}px`,
+              backgroundPosition: `${state.viewport.x}px ${state.viewport.y}px`,
               cursor: state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
               touchAction: 'none',
               display: 'block',
