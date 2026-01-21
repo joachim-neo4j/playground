@@ -458,8 +458,7 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 // Object Components
 function StickyNote({ obj, isSelected, onPointerDown }) {
   // FigJam-style sticky note with shadow and better styling
-  const shadowOffset = 2;
-  const shadowBlur = 4;
+  const shadowOffset = 3;
   
   return (
     <g
@@ -467,26 +466,29 @@ function StickyNote({ obj, isSelected, onPointerDown }) {
       onPointerDown={onPointerDown}
       style={{ cursor: 'move' }}
     >
-      {/* Drop shadow */}
-      <rect
-        x={shadowOffset}
-        y={shadowOffset}
-        width={obj.width}
-        height={obj.height}
-        fill="rgba(0, 0, 0, 0.15)"
-        rx={8}
-        ry={8}
-        style={{ filter: `blur(${shadowBlur}px)` }}
-      />
-      {/* Main sticky note */}
+      <defs>
+        <filter id={`shadow-${obj.id}`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+          <feOffset dx={shadowOffset} dy={shadowOffset} result="offsetblur"/>
+          <feComponentTransfer>
+            <feFuncA type="linear" slope="0.3"/>
+          </feComponentTransfer>
+          <feMerge>
+            <feMergeNode/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      {/* Main sticky note with shadow filter */}
       <rect
         width={obj.width}
         height={obj.height}
         fill={obj.color}
-        stroke={isSelected ? '#3B82F6' : 'rgba(0, 0, 0, 0.1)'}
+        stroke={isSelected ? '#3B82F6' : 'rgba(0, 0, 0, 0.12)'}
         strokeWidth={isSelected ? 2 : 1}
         rx={8}
         ry={8}
+        filter={!isSelected ? `url(#shadow-${obj.id})` : undefined}
       />
       {/* Text with better padding and styling */}
       {obj.text && (
