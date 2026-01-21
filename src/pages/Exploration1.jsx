@@ -8,6 +8,10 @@ import {
   HandRaisedIconOutline,
   ArrowUturnLeftIconOutline,
   ArrowUturnRightIconOutline,
+  TrashIconOutline,
+  Square2StackIconOutline,
+  ArrowUpIconOutline,
+  ArrowDownIconOutline,
 } from '@neo4j-ndl/react/icons';
 
 // Action types
@@ -24,6 +28,9 @@ const ActionTypes = {
   REDO: 'REDO',
   START_EDIT_TEXT: 'START_EDIT_TEXT',
   STOP_EDIT_TEXT: 'STOP_EDIT_TEXT',
+  DUPLICATE_OBJECT: 'DUPLICATE_OBJECT',
+  BRING_TO_FRONT: 'BRING_TO_FRONT',
+  SEND_TO_BACK: 'SEND_TO_BACK',
 };
 
 // Initial state
@@ -452,6 +459,205 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
         </div>
       </div>
     </>
+  );
+}
+
+// Floating Toolbar Component (appears above selected items)
+function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColorChange, onBringToFront, onSendToBack }) {
+  const toolbarRef = React.useRef(null);
+  const [position, setPosition] = React.useState({ x: 0, y: 0 });
+  const [showColorPicker, setShowColorPicker] = React.useState(false);
+
+  // Convert world coordinates to screen coordinates
+  const worldToScreen = React.useCallback((worldX, worldY) => {
+    const { x, y, zoom } = viewport;
+    return {
+      x: worldX * zoom + x,
+      y: worldY * zoom + y,
+    };
+  }, [viewport]);
+
+  // Update position when object or viewport changes
+  React.useEffect(() => {
+    if (!obj || !svgRef.current) return;
+    
+    const rect = svgRef.current.getBoundingClientRect();
+    const screenPos = worldToScreen(obj.x + obj.width / 2, obj.y);
+    
+    // Position toolbar above the object
+    setPosition({
+      x: rect.left + screenPos.x,
+      y: rect.top + screenPos.y - 50, // 50px above the object
+    });
+  }, [obj, viewport, worldToScreen, svgRef]);
+
+  if (!obj) return null;
+
+  const colorOptions = [
+    '#D4EDDA', // Light green
+    '#FFFFFF', // White
+    '#FFE5E5', // Light red
+    '#E5E5FF', // Light blue
+    '#FFF5E5', // Light orange
+    '#E5FFE5', // Light green
+    '#F0E5FF', // Light purple
+    '#FFE5F0', // Light pink
+  ];
+
+  const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
+
+  return (
+    <div
+      ref={toolbarRef}
+      className="fixed z-[10001]"
+      style={{
+        left: `${position.x}px`,
+        top: `${position.y}px`,
+        transform: 'translate(-50%, 0)',
+        pointerEvents: 'auto',
+      }}
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div
+        className="rounded-lg border flex items-center gap-1 px-1 py-1"
+        style={{
+          backgroundColor: '#ffffff',
+          borderColor: '#d1d5db',
+          borderWidth: '1px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        }}
+      >
+        {/* Color picker (circle) for sticky, rectangle, and text */}
+        {supportsColor && (
+          <div className="relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowColorPicker(!showColorPicker);
+              }}
+              className="toolbar-button rounded transition-colors flex items-center justify-center"
+              style={{
+                width: '32px',
+                height: '32px',
+                padding: '6px',
+              }}
+              title="Change color"
+            >
+              <div
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  backgroundColor: obj.color || '#D4EDDA',
+                  border: '1px solid #d1d5db',
+                }}
+              />
+            </button>
+            {showColorPicker && (
+              <div
+                className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 rounded-lg border p-2"
+                style={{
+                  backgroundColor: '#ffffff',
+                  borderColor: '#d1d5db',
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, 1fr)',
+                  gap: '4px',
+                }}
+              >
+                {colorOptions.map((color) => (
+                  <button
+                    key={color}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onColorChange(color);
+                      setShowColorPicker(false);
+                    }}
+                    style={{
+                      width: '24px',
+                      height: '24px',
+                      borderRadius: '50%',
+                      backgroundColor: color,
+                      border: obj.color === color ? '2px solid #3B82F6' : '1px solid #d1d5db',
+                      cursor: 'pointer',
+                    }}
+                    title={color}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Duplicate */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDuplicate();
+          }}
+          className="toolbar-button rounded transition-colors flex items-center justify-center"
+          style={{
+            width: '32px',
+            height: '32px',
+            padding: '6px',
+          }}
+          title="Duplicate"
+        >
+          <Square2StackIconOutline className="h-5 w-5" />
+        </button>
+
+        {/* Bring to front */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onBringToFront();
+          }}
+          className="toolbar-button rounded transition-colors flex items-center justify-center"
+          style={{
+            width: '32px',
+            height: '32px',
+            padding: '6px',
+          }}
+          title="Bring to front"
+        >
+          <ArrowUpIconOutline className="h-5 w-5" />
+        </button>
+
+        {/* Send to back */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSendToBack();
+          }}
+          className="toolbar-button rounded transition-colors flex items-center justify-center"
+          style={{
+            width: '32px',
+            height: '32px',
+            padding: '6px',
+          }}
+          title="Send to back"
+        >
+          <ArrowDownIconOutline className="h-5 w-5" />
+        </button>
+
+        {/* Delete */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
+          className="toolbar-button rounded transition-colors flex items-center justify-center"
+          style={{
+            width: '32px',
+            height: '32px',
+            padding: '6px',
+          }}
+          title="Delete"
+        >
+          <TrashIconOutline className="h-5 w-5" />
+        </button>
+      </div>
+    </div>
   );
 }
 
