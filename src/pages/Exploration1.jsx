@@ -69,6 +69,9 @@ function whiteboardReducer(state, action) {
         height: action.height || 100,
         text: action.text || '',
         color: action.color || '#FFEB3B',
+        bold: false,
+        italic: false,
+        underline: false,
         ...action.props,
       };
       const newObjects = [...state.objects, newObject];
@@ -1021,6 +1024,9 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               resize: 'none',
               padding: 0,
               margin: 0,
+              fontWeight: obj.bold ? 'bold' : 'normal',
+              fontStyle: obj.italic ? 'italic' : 'normal',
+              textDecoration: obj.underline ? 'underline' : 'none',
             }}
           />
         </foreignObject>
@@ -1037,6 +1043,9 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
                 whiteSpace: 'pre-wrap',
                 pointerEvents: 'none',
                 userSelect: 'none',
+                fontWeight: obj.bold ? 'bold' : 'normal',
+                fontStyle: obj.italic ? 'italic' : 'normal',
+                textDecoration: obj.underline ? 'underline' : 'none',
               }}
             >
               {obj.text}
