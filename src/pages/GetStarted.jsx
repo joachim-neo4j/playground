@@ -5,7 +5,7 @@ export default function GetStarted() {
     <Layout>
       <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8">
         {/* Title and Action Buttons */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-4 flex items-center justify-between">
           <h1 className="text-3xl lg:text-4xl">Get started</h1>
           <div className="flex flex-col gap-3 sm:flex-row">
             <button className="inline-flex items-center justify-center gap-2 rounded-md bg-white border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
