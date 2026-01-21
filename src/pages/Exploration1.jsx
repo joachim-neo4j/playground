@@ -741,7 +741,8 @@ export default function Exploration1() {
     }
 
     if (state.tool === 'select') {
-      // If editing a sticky note or text, save it when clicking outside
+      // If editing a sticky note or text, stop editing when clicking outside
+      // The blur handler will save the text automatically
       if (state.editingTextId) {
         const editingObj = state.objects.find(o => o.id === state.editingTextId);
         if (editingObj && (editingObj.type === 'sticky' || editingObj.type === 'text')) {
@@ -753,8 +754,11 @@ export default function Exploration1() {
             world.y <= editingObj.y + editingObj.height
           );
           if (!isClickInside) {
-            // Save the current text and stop editing
-            dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+            // Blur will be triggered automatically, but ensure we stop editing
+            // Use setTimeout to let blur handler fire first
+            setTimeout(() => {
+              dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+            }, 0);
           }
         }
       }
