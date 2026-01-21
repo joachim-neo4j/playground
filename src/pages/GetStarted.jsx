@@ -3,7 +3,7 @@ import Layout from '../components/Layout';
 export default function GetStarted() {
   return (
     <Layout>
-      <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8">
+      <div className="mx-auto max-w-7xl px-6 py-6 lg:px-8 lg:py-8 bg-background">
         {/* Title and Action Buttons */}
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-3xl lg:text-4xl">Get started</h1>
