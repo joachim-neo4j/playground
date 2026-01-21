@@ -1144,6 +1144,17 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     });
   };
 
+  // Auto-resize textarea to fit content while editing
+  React.useEffect(() => {
+    if (isEditing && inputRef.current) {
+      const textarea = inputRef.current;
+      // Reset height to auto to get the correct scrollHeight
+      textarea.style.height = 'auto';
+      // Set height to scrollHeight to fit content
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    }
+  }, [inputValue, isEditing]);
+
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -1252,14 +1263,19 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         <foreignObject
           x={0}
           y={0}
-          width={selectionWidth || 200}
-          height={selectionHeight || 30}
+          width={Math.max(selectionWidth || 200, 200)}
+          height={Math.max(selectionHeight || 30, inputRef.current?.scrollHeight || 30)}
         >
-          <input
+          <textarea
             ref={inputRef}
-            type="text"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              // Auto-resize textarea to fit content
+              const textarea = e.target;
+              textarea.style.height = 'auto';
+              textarea.style.height = `${textarea.scrollHeight}px`;
+            }}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
             style={{
@@ -1268,12 +1284,15 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               border: 'none',
               outline: 'none',
               width: '100%',
-              height: '100%',
+              minHeight: '30px',
               backgroundColor: 'transparent',
               fontFamily: 'inherit',
               padding: 0,
               margin: 0,
               background: 'transparent',
+              resize: 'none',
+              overflow: 'hidden',
+              lineHeight: '1.2',
             }}
           />
         </foreignObject>
