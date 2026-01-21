@@ -587,6 +587,14 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
     '#E5FFE5', // Light green
     '#F0E5FF', // Light purple
     '#FFE5F0', // Light pink
+    '#A8D5BA', // Darker green
+    '#E0E0E0', // Light gray
+    '#FFB3B3', // Darker red
+    '#B3B3FF', // Darker blue
+    '#FFD9B3', // Darker orange
+    '#B3FFB3', // Darker green
+    '#D9B3FF', // Darker purple
+    '#FFB3D9', // Darker pink
   ];
 
   const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
