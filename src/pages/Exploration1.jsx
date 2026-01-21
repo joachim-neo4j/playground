@@ -505,6 +505,13 @@ export default function Exploration1() {
   const dragObjectId = useRef(null);
   const isPanning = useRef(false);
   const panStart = useRef({ x: 0, y: 0 });
+  const touchState = useRef({
+    touches: [],
+    lastDistance: 0,
+    lastCenter: { x: 0, y: 0 },
+    isPinching: false,
+    isTwoFingerPan: false,
+  });
 
   // Convert screen coordinates to world coordinates
   const screenToWorld = useCallback((screenX, screenY) => {
@@ -614,10 +621,137 @@ export default function Exploration1() {
   }, [state.viewport, screenToWorld]);
 
   // Handle pointer up
-  const handlePointerUp = useCallback(() => {
+  const handlePointerUp = useCallback((e) => {
     isDragging.current = false;
     dragObjectId.current = null;
     isPanning.current = false;
+    
+    // Reset touch state
+    touchState.current = {
+      touches: [],
+      lastDistance: 0,
+      lastCenter: { x: 0, y: 0 },
+      isPinching: false,
+      isTwoFingerPan: false,
+    };
+  }, []);
+
+  // Calculate distance between two touches
+  const getTouchDistance = (touch1, touch2) => {
+    const dx = touch2.clientX - touch1.clientX;
+    const dy = touch2.clientY - touch1.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  };
+
+  // Calculate center point between two touches
+  const getTouchCenter = (touch1, touch2) => {
+    return {
+      x: (touch1.clientX + touch2.clientX) / 2,
+      y: (touch1.clientY + touch2.clientY) / 2,
+    };
+  };
+
+  // Handle touch start
+  const handleTouchStart = useCallback((e) => {
+    if (e.touches.length === 2) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = getTouchDistance(touch1, touch2);
+      const center = getTouchCenter(touch1, touch2);
+      
+      touchState.current = {
+        touches: [touch1, touch2],
+        lastDistance: distance,
+        lastCenter: center,
+        isPinching: true,
+        isTwoFingerPan: false,
+      };
+      
+      e.preventDefault();
+    } else if (e.touches.length === 1) {
+      // Single touch - allow normal interaction
+      touchState.current.touches = [e.touches[0]];
+    }
+  }, []);
+
+  // Handle touch move
+  const handleTouchMove = useCallback((e) => {
+    if (e.touches.length === 2 && touchState.current.isPinching) {
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const distance = getTouchDistance(touch1, touch2);
+      const center = getTouchCenter(touch1, touch2);
+      
+      const rect = svgRef.current.getBoundingClientRect();
+      const screenX = center.x - rect.left;
+      const screenY = center.y - rect.top;
+      
+      // Calculate zoom factor
+      const distanceDelta = distance - touchState.current.lastDistance;
+      const zoomFactor = 1 + (distanceDelta * 0.01);
+      const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
+      
+      // Zoom towards the center point between the two touches
+      const worldBefore = screenToWorld(screenX, screenY);
+      const newX = screenX - worldBefore.x * newZoom;
+      const newY = screenY - worldBefore.y * newZoom;
+      
+      // Also handle pan if center moved
+      const centerDeltaX = center.x - touchState.current.lastCenter.x;
+      const centerDeltaY = center.y - touchState.current.lastCenter.y;
+      
+      dispatch({
+        type: ActionTypes.SET_VIEWPORT,
+        viewport: {
+          x: newX + centerDeltaX,
+          y: newY + centerDeltaY,
+          zoom: newZoom,
+        },
+      });
+      
+      touchState.current.lastDistance = distance;
+      touchState.current.lastCenter = center;
+      
+      e.preventDefault();
+    } else if (e.touches.length === 2 && !touchState.current.isPinching) {
+      // Two finger pan (without zoom)
+      const touch1 = e.touches[0];
+      const touch2 = e.touches[1];
+      const center = getTouchCenter(touch1, touch2);
+      
+      if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
+        const dx = center.x - touchState.current.lastCenter.x;
+        const dy = center.y - touchState.current.lastCenter.y;
+        
+        dispatch({
+          type: ActionTypes.SET_VIEWPORT,
+          viewport: {
+            x: state.viewport.x + dx,
+            y: state.viewport.y + dy,
+            zoom: state.viewport.zoom,
+          },
+        });
+      }
+      
+      touchState.current.lastCenter = center;
+      touchState.current.isTwoFingerPan = true;
+      
+      e.preventDefault();
+    }
+  }, [state.viewport, screenToWorld]);
+
+  // Handle touch end
+  const handleTouchEnd = useCallback((e) => {
+    if (e.touches.length < 2) {
+      // Reset touch state when we have less than 2 touches
+      touchState.current = {
+        touches: [],
+        lastDistance: 0,
+        lastCenter: { x: 0, y: 0 },
+        isPinching: false,
+        isTwoFingerPan: false,
+      };
+    }
   }, []);
 
   // Handle wheel zoom (including pinch zoom on trackpad)
@@ -796,6 +930,10 @@ export default function Exploration1() {
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerUp}
             onWheel={handleWheel}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onTouchCancel={handleTouchEnd}
           >
             <g
               transform={`translate(${state.viewport.x}, ${state.viewport.y}) scale(${state.viewport.zoom})`}
