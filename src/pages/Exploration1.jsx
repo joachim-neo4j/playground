@@ -184,11 +184,17 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
     </svg>
   );
 
+  const TextIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" className="ndl-icon-svg">
+      <path d="M3.60001 5.4V4.8016C3.5998 4.56509 3.6462 4.33085 3.73656 4.11228C3.82693 3.89371 3.95948 3.69509 4.12665 3.52777C4.29381 3.36046 4.49232 3.22773 4.71081 3.13717C4.9293 3.04661 5.16349 3 5.40001 3H18.6C18.8365 3 19.0707 3.04661 19.2892 3.13717C19.5077 3.22773 19.7062 3.36046 19.8734 3.52777C20.0405 3.69509 20.1731 3.89371 20.2634 4.11228C20.3538 4.33085 20.4002 4.56509 20.4 4.8016V5.4016M11.9996 3V21M8.39896 20.9999H15.599" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+    </svg>
+  );
+
   const tools = [
     { id: 'select', label: 'Select', Icon: SelectIcon },
     { id: 'sticky', label: 'Sticky', Icon: RectangleStackIconOutline },
     { id: 'rectangle', label: 'Rectangle', Icon: RectangleGroupIconOutline },
-    { id: 'text', label: 'Text', Icon: DocumentTextIconOutline },
+    { id: 'text', label: 'Text', Icon: TextIcon },
     { id: 'hand', label: 'Hand', Icon: HandRaisedIconOutline },
   ];
 
