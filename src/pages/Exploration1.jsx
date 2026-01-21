@@ -771,7 +771,7 @@ export default function Exploration1() {
         touches: [touch1, touch2],
         lastDistance: distance,
         lastCenter: center,
-        isPinching: true,
+        isPinching: false,
         isTwoFingerPan: false,
       };
       
@@ -796,11 +796,11 @@ export default function Exploration1() {
         ? (distanceChange / touchState.current.lastDistance) * 100 
         : 0;
       
-      // If distance changes by more than 5%, treat it as a pinch/zoom gesture
-      const isPinching = distanceChangePercent > 5;
+      // Higher threshold (15%) to distinguish pinch from accidental distance changes during panning
+      const isPinching = distanceChangePercent > 15;
       
-      if (isPinching) {
-        // Pinch to zoom
+      if (isPinching && touchState.current.lastDistance > 0) {
+        // Pinch to zoom - only when distance changes significantly
         const rect = svgRef.current.getBoundingClientRect();
         const screenX = center.x - rect.left;
         const screenY = center.y - rect.top;
@@ -825,8 +825,9 @@ export default function Exploration1() {
         });
         
         touchState.current.isPinching = true;
+        touchState.current.isTwoFingerPan = false;
       } else {
-        // Two finger pan (distance relatively constant)
+        // Two finger pan (default behavior - distance relatively constant or small changes)
         if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
           const dx = center.x - touchState.current.lastCenter.x;
           const dy = center.y - touchState.current.lastCenter.y;
