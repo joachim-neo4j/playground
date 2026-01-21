@@ -2141,6 +2141,24 @@ export default function Exploration1() {
                 });
               }
             }}
+            onFormatChange={(format, value) => {
+              if (state.selectedObjectId) {
+                dispatch({
+                  type: ActionTypes.UPDATE_OBJECT,
+                  id: state.selectedObjectId,
+                  updates: { [format]: value },
+                });
+              }
+            }}
+            onFontSizeChange={(fontSize) => {
+              if (state.selectedObjectId) {
+                dispatch({
+                  type: ActionTypes.UPDATE_OBJECT,
+                  id: state.selectedObjectId,
+                  updates: { fontSize },
+                });
+              }
+            }}
             onBringToFront={() => {
               if (state.selectedObjectId) {
                 dispatch({ type: ActionTypes.BRING_TO_FRONT, id: state.selectedObjectId });
