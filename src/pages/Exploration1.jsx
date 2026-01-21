@@ -220,10 +220,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
                   ? 'bg-gray-200'
                   : 'hover:bg-gray-100'
               }`}
-              style={{ width: '32px', height: '32px', padding: 0 }}
+              style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title={t.label}
             >
-              <Icon className="h-5 w-5" style={{ color: '#4b5563' }} />
+              <Icon className="h-5 w-5" style={{ color: '#4b5563', display: 'block' }} />
             </button>
           );
         })}
@@ -234,10 +234,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
           className={`rounded transition-colors flex items-center justify-center ${
             canUndo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
-          style={{ width: '32px', height: '32px', padding: 0 }}
+          style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           title="Undo"
         >
-          <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af' }} />
+          <ArrowUturnLeftIconOutline className="h-5 w-5" style={{ color: canUndo ? '#4b5563' : '#9ca3af', display: 'block' }} />
         </button>
         <button
           onClick={onRedo}
@@ -245,10 +245,10 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
           className={`rounded transition-colors flex items-center justify-center ${
             canRedo ? 'hover:bg-gray-100' : 'opacity-40 cursor-not-allowed'
           }`}
-          style={{ width: '32px', height: '32px', padding: 0 }}
+          style={{ width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           title="Redo"
         >
-          <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af' }} />
+          <ArrowUturnRightIconOutline className="h-5 w-5" style={{ color: canRedo ? '#4b5563' : '#9ca3af', display: 'block' }} />
         </button>
       </div>
     </div>
