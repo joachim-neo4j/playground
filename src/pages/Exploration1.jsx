@@ -1431,24 +1431,28 @@ export default function Exploration1() {
       const deltaX = world.x - (resizeStart.current.x + resizeStart.current.width);
       const deltaY = world.y - (resizeStart.current.y + resizeStart.current.height);
 
+      // Set minimum sizes based on object type
+      const minWidth = obj.type === 'text' ? 50 : obj.type === 'sticky' ? 100 : 50;
+      const minHeight = obj.type === 'text' ? 20 : obj.type === 'sticky' ? 100 : 30;
+
       if (handle === 'se') {
         // Bottom-right
-        newWidth = Math.max(50, resizeStart.current.width + deltaX);
-        newHeight = Math.max(20, resizeStart.current.height + deltaY);
+        newWidth = Math.max(minWidth, resizeStart.current.width + deltaX);
+        newHeight = Math.max(minHeight, resizeStart.current.height + deltaY);
       } else if (handle === 'sw') {
         // Bottom-left
-        newWidth = Math.max(50, resizeStart.current.width - deltaX);
-        newHeight = Math.max(20, resizeStart.current.height + deltaY);
+        newWidth = Math.max(minWidth, resizeStart.current.width - deltaX);
+        newHeight = Math.max(minHeight, resizeStart.current.height + deltaY);
         newX = resizeStart.current.x + resizeStart.current.width - newWidth;
       } else if (handle === 'ne') {
         // Top-right
-        newWidth = Math.max(50, resizeStart.current.width + deltaX);
-        newHeight = Math.max(20, resizeStart.current.height - deltaY);
+        newWidth = Math.max(minWidth, resizeStart.current.width + deltaX);
+        newHeight = Math.max(minHeight, resizeStart.current.height - deltaY);
         newY = resizeStart.current.y + resizeStart.current.height - newHeight;
       } else if (handle === 'nw') {
         // Top-left
-        newWidth = Math.max(50, resizeStart.current.width - deltaX);
-        newHeight = Math.max(20, resizeStart.current.height - deltaY);
+        newWidth = Math.max(minWidth, resizeStart.current.width - deltaX);
+        newHeight = Math.max(minHeight, resizeStart.current.height - deltaY);
         newX = resizeStart.current.x + resizeStart.current.width - newWidth;
         newY = resizeStart.current.y + resizeStart.current.height - newHeight;
       }
