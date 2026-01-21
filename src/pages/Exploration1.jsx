@@ -741,6 +741,24 @@ export default function Exploration1() {
     }
 
     if (state.tool === 'select') {
+      // If editing a sticky note or text, save it when clicking outside
+      if (state.editingTextId) {
+        const editingObj = state.objects.find(o => o.id === state.editingTextId);
+        if (editingObj && (editingObj.type === 'sticky' || editingObj.type === 'text')) {
+          // Check if clicking outside the editing object
+          const isClickInside = (
+            world.x >= editingObj.x &&
+            world.x <= editingObj.x + editingObj.width &&
+            world.y >= editingObj.y &&
+            world.y <= editingObj.y + editingObj.height
+          );
+          if (!isClickInside) {
+            // Save the current text and stop editing
+            dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+          }
+        }
+      }
+      
       // Check if clicking on an object
       const clickedObject = [...state.objects]
         .reverse()
