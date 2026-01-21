@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { HomeIconOutline, CodeBracketIconOutline, CircleStackIconOutline } from '@neo4j-ndl/react/icons';
 
 export default function Sidebar() {
@@ -64,7 +65,7 @@ export default function Sidebar() {
                 </svg>
               </div>
             </div>
-            {showPlaygroundMenu && playgroundMenuPosition && (
+            {showPlaygroundMenu && playgroundMenuPosition && createPortal(
               <div 
                 className="fixed bg-white border border-gray-200 rounded-md shadow-lg z-[9999] min-w-[200px] py-1"
                 style={{ top: `${playgroundMenuPosition.top}px`, left: `${playgroundMenuPosition.left}px` }}
@@ -76,7 +77,8 @@ export default function Sidebar() {
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 3</div>
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 4</div>
                 <div className="px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">Exploration 5</div>
-              </div>
+              </div>,
+              document.body
             )}
           </div>
         </div>
