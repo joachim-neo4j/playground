@@ -326,6 +326,7 @@ function renderObject(obj, isSelected, onPointerDown) {
 export default function Exploration1() {
   const [state, dispatch] = useReducer(whiteboardReducer, initialState);
   const svgRef = useRef(null);
+  const containerRef = useRef(null);
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
   const dragObjectId = useRef(null);
@@ -525,9 +526,31 @@ export default function Exploration1() {
   const canUndo = state.history.past.length > 0;
   const canRedo = state.history.future.length > 0;
 
+  // Prevent scrolling on the container
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const preventScroll = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    container.addEventListener('wheel', preventScroll, { passive: false });
+    container.addEventListener('touchmove', preventScroll, { passive: false });
+    container.addEventListener('scroll', preventScroll, { passive: false });
+
+    return () => {
+      container.removeEventListener('wheel', preventScroll);
+      container.removeEventListener('touchmove', preventScroll);
+      container.removeEventListener('scroll', preventScroll);
+    };
+  }, []);
+
   return (
     <Layout>
       <div 
+        ref={containerRef}
         style={{ 
           backgroundColor: '#f5f6f6', 
           height: '100%', 
@@ -537,14 +560,8 @@ export default function Exploration1() {
           display: 'flex',
           flexDirection: 'column',
         }}
-        onWheel={(e) => {
-          // Prevent page scrolling when interacting with canvas
-          if (e.target.closest('svg')) {
-            e.preventDefault();
-          }
-        }}
       >
-        <div style={{ width: '100%', flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <div style={{ width: '100%', flex: 1, position: 'relative', overflow: 'hidden', height: 0 }}>
           <svg
             ref={svgRef}
             width="100%"
@@ -555,6 +572,7 @@ export default function Exploration1() {
               backgroundSize: '20px 20px',
               cursor: state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
               touchAction: 'none',
+              display: 'block',
             }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
