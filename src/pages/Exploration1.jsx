@@ -971,8 +971,8 @@ export default function Exploration1() {
       // Pinch zoom - use deltaY directly
       zoomFactor = 1 - (e.deltaY * 0.01);
     } else {
-      // Regular scroll zoom
-      zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+      // Regular scroll zoom - reduced to 5% steps
+      zoomFactor = e.deltaY > 0 ? 0.95 : 1.05;
     }
     
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
