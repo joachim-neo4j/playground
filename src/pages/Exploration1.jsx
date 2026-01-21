@@ -741,7 +741,7 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
 }
 
 // Object Components
-function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef }) {
+function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef, onResizeHandleDown }) {
   // FigJam-style sticky note with shadow and better styling
   const shadowOffset = 3;
   const inputRef = React.useRef(null);
@@ -781,6 +781,8 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     }
   };
 
+  const handleSize = 8;
+
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
@@ -812,6 +814,88 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         ry={6}
         filter={!isSelected ? `url(#shadow-${obj.id})` : undefined}
       />
+      
+      {/* Selection box */}
+      {isSelected && !isEditing && (
+        <rect
+          x={0}
+          y={0}
+          width={obj.width}
+          height={obj.height}
+          fill="none"
+          stroke="#3B82F6"
+          strokeWidth={2}
+          strokeDasharray="4 4"
+          rx={6}
+          ry={6}
+        />
+      )}
+      
+      {/* Resize handles */}
+      {isSelected && !isEditing && onResizeHandleDown && (
+        <>
+          {/* Top-left */}
+          <rect
+            x={-handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'nw');
+            }}
+          />
+          {/* Top-right */}
+          <rect
+            x={obj.width - handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'ne');
+            }}
+          />
+          {/* Bottom-left */}
+          <rect
+            x={-handleSize / 2}
+            y={obj.height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'sw');
+            }}
+          />
+          {/* Bottom-right */}
+          <rect
+            x={obj.width - handleSize / 2}
+            y={obj.height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'se');
+            }}
+          />
+        </>
+      )}
       {/* Text or editable textarea */}
       {isEditing ? (
         <foreignObject x={16} y={16} width={obj.width - 32} height={obj.height - 32}>
@@ -861,7 +945,9 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   );
 }
 
-function Rectangle({ obj, isSelected, onPointerDown }) {
+function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
+  const handleSize = 8;
+
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
@@ -875,6 +961,86 @@ function Rectangle({ obj, isSelected, onPointerDown }) {
         stroke={isSelected ? '#3B82F6' : obj.color || '#000'}
         strokeWidth={2}
       />
+      
+      {/* Selection box */}
+      {isSelected && (
+        <rect
+          x={0}
+          y={0}
+          width={obj.width}
+          height={obj.height}
+          fill="none"
+          stroke="#3B82F6"
+          strokeWidth={2}
+          strokeDasharray="4 4"
+        />
+      )}
+      
+      {/* Resize handles */}
+      {isSelected && onResizeHandleDown && (
+        <>
+          {/* Top-left */}
+          <rect
+            x={-handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'nw');
+            }}
+          />
+          {/* Top-right */}
+          <rect
+            x={obj.width - handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'ne');
+            }}
+          />
+          {/* Bottom-left */}
+          <rect
+            x={-handleSize / 2}
+            y={obj.height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'sw');
+            }}
+          />
+          {/* Bottom-right */}
+          <rect
+            x={obj.width - handleSize / 2}
+            y={obj.height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'se');
+            }}
+          />
+        </>
+      )}
     </g>
   );
 }
@@ -917,6 +1083,11 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     }
   };
 
+  // Ensure text objects have width and height
+  const width = obj.width || 200;
+  const height = obj.height || 30;
+  const handleSize = 8;
+
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
@@ -924,12 +1095,92 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
       onDoubleClick={isEditing ? undefined : onDoubleClick}
       style={{ cursor: isEditing ? 'text' : isSelected ? 'move' : 'text' }}
     >
+      {/* Selection box */}
+      {isSelected && !isEditing && (
+        <rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          fill="none"
+          stroke="#3B82F6"
+          strokeWidth={2}
+          strokeDasharray="4 4"
+        />
+      )}
+      
+      {/* Resize handles */}
+      {isSelected && !isEditing && onResizeHandleDown && (
+        <>
+          {/* Top-left */}
+          <rect
+            x={-handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'nw');
+            }}
+          />
+          {/* Top-right */}
+          <rect
+            x={width - handleSize / 2}
+            y={-handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'ne');
+            }}
+          />
+          {/* Bottom-left */}
+          <rect
+            x={-handleSize / 2}
+            y={height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nesw-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'sw');
+            }}
+          />
+          {/* Bottom-right */}
+          <rect
+            x={width - handleSize / 2}
+            y={height - handleSize / 2}
+            width={handleSize}
+            height={handleSize}
+            fill="#3B82F6"
+            stroke="#ffffff"
+            strokeWidth={1}
+            style={{ cursor: 'nwse-resize' }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              onResizeHandleDown(e, 'se');
+            }}
+          />
+        </>
+      )}
+
       {isEditing ? (
         <foreignObject
           x={0}
-          y={-(obj.fontSize || 16)}
-          width={Math.max(200, 200 / viewport.zoom)}
-          height={(obj.fontSize || 16) * 1.5}
+          y={0}
+          width={width}
+          height={height}
         >
           <input
             ref={inputRef}
@@ -944,6 +1195,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               border: 'none',
               outline: 'none',
               width: '100%',
+              height: '100%',
               backgroundColor: 'transparent',
               fontFamily: 'inherit',
               padding: 0,
@@ -953,16 +1205,28 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
         </foreignObject>
       ) : (
-        <text
+        <foreignObject
           x={0}
           y={0}
-          fontSize={obj.fontSize || 16}
-          fill={obj.color || '#000'}
-          stroke={isSelected ? '#3B82F6' : 'none'}
-          strokeWidth={isSelected ? 1 : 0}
+          width={width}
+          height={height}
         >
-          {obj.text || 'Text'}
-        </text>
+          <div
+            style={{
+              fontSize: `${obj.fontSize || 16}px`,
+              color: obj.color || '#000',
+              fontFamily: 'inherit',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+            }}
+          >
+            {obj.text || 'Text'}
+          </div>
+        </foreignObject>
       )}
     </g>
   );
@@ -982,10 +1246,19 @@ function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           onUpdate={onUpdate}
           viewport={viewport}
           textareaRef={textareaRef}
+          onResizeHandleDown={onResizeHandleDown}
         />
       );
     case 'rectangle':
-      return <Rectangle key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
+      return (
+        <Rectangle
+          key={obj.id}
+          obj={obj}
+          isSelected={isSelected}
+          onPointerDown={onPointerDown}
+          onResizeHandleDown={onResizeHandleDown}
+        />
+      );
     case 'text':
       return (
         <TextObject
