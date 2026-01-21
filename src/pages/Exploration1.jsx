@@ -187,13 +187,14 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
   ];
 
   return (
-    <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-50">
       <div 
         className="rounded-lg border flex items-center gap-0.5 px-1 py-1"
         style={{
-          backgroundColor: '#f5f5f5',
+          backgroundColor: '#ffffff',
           borderColor: '#d1d5db',
           borderWidth: '1px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         }}
       >
         {tools.map(t => {
