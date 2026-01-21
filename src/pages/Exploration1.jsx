@@ -1102,14 +1102,25 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   // Measure text bounds when text or font size changes
   React.useEffect(() => {
     if (!isEditing && textMeasureRef.current) {
-      const measureDiv = textMeasureRef.current;
-      // Use scrollWidth and scrollHeight for accurate text measurement
-      setTextBounds({
-        width: measureDiv.scrollWidth,
-        height: measureDiv.scrollHeight,
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        if (textMeasureRef.current) {
+          const measureDiv = textMeasureRef.current;
+          // Use scrollWidth and scrollHeight for accurate text measurement
+          const newWidth = measureDiv.scrollWidth;
+          const newHeight = measureDiv.scrollHeight;
+          setTextBounds({
+            width: newWidth,
+            height: newHeight,
+          });
+          // Update object dimensions to match text bounds
+          if (newWidth > 0 && newHeight > 0 && (obj.width !== newWidth || obj.height !== newHeight)) {
+            onUpdate(null, { width: newWidth, height: newHeight });
+          }
+        }
       });
     }
-  }, [obj.text, obj.fontSize, isEditing, viewport.zoom]);
+  }, [obj.text, obj.fontSize, isEditing, viewport.zoom, obj.width, obj.height, onUpdate]);
 
   const handleBlur = () => {
     onUpdate(inputValue);
@@ -1690,18 +1701,21 @@ export default function Exploration1() {
   }, [state.tool, state.objects, state.editingTextId]);
 
   // Handle text update
-  const handleTextUpdate = useCallback((objId, newText) => {
-    if (newText === null) {
+  const handleTextUpdate = useCallback((objId, newText, additionalUpdates = {}) => {
+    if (newText === null && Object.keys(additionalUpdates).length === 0) {
       // Cancel editing
       dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
       return;
     }
+    const updates = newText !== null ? { text: newText, ...additionalUpdates } : additionalUpdates;
     dispatch({
       type: ActionTypes.UPDATE_OBJECT,
       id: objId,
-      updates: { text: newText },
+      updates,
     });
-    dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+    if (newText !== null) {
+      dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+    }
   }, []);
 
   // Ref to track editing textarea elements
