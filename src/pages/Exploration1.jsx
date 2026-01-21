@@ -1310,7 +1310,8 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               color: obj.color || '#000',
               fontFamily: 'inherit',
               display: 'inline-block',
-              whiteSpace: 'nowrap',
+              whiteSpace: 'pre-wrap',
+              wordWrap: 'break-word',
               lineHeight: '1.2',
             }}
           >
