@@ -193,6 +193,60 @@ function whiteboardReducer(state, action) {
         editingTextId: null,
       };
 
+    case ActionTypes.DUPLICATE_OBJECT:
+      const objToDuplicate = state.objects.find(o => o.id === action.id);
+      if (!objToDuplicate) return state;
+      const newId = `obj-${Date.now()}-${Math.random()}`;
+      return {
+        ...state,
+        objects: [
+          ...state.objects,
+          {
+            ...objToDuplicate,
+            id: newId,
+            x: objToDuplicate.x + 20,
+            y: objToDuplicate.y + 20,
+          },
+        ],
+        history: {
+          past: [...state.history.past, state.objects],
+          present: null,
+          future: [],
+        },
+      };
+
+    case ActionTypes.BRING_TO_FRONT:
+      const objToFront = state.objects.find(o => o.id === action.id);
+      if (!objToFront) return state;
+      return {
+        ...state,
+        objects: [
+          ...state.objects.filter(o => o.id !== action.id),
+          objToFront,
+        ],
+        history: {
+          past: [...state.history.past, state.objects],
+          present: null,
+          future: [],
+        },
+      };
+
+    case ActionTypes.SEND_TO_BACK:
+      const objToBack = state.objects.find(o => o.id === action.id);
+      if (!objToBack) return state;
+      return {
+        ...state,
+        objects: [
+          objToBack,
+          ...state.objects.filter(o => o.id !== action.id),
+        ],
+        history: {
+          past: [...state.history.past, state.objects],
+          present: null,
+          future: [],
+        },
+      };
+
     default:
       return state;
   }
@@ -1445,6 +1499,43 @@ export default function Exploration1() {
             </g>
           </svg>
         </div>
+        {state.selectedObjectId && (
+          <FloatingToolbar
+            obj={state.objects.find(o => o.id === state.selectedObjectId)}
+            viewport={state.viewport}
+            svgRef={svgRef}
+            onDelete={() => {
+              if (state.selectedObjectId) {
+                dispatch({ type: ActionTypes.DELETE_OBJECT, id: state.selectedObjectId });
+                dispatch({ type: ActionTypes.DESELECT_ALL });
+              }
+            }}
+            onDuplicate={() => {
+              if (state.selectedObjectId) {
+                dispatch({ type: ActionTypes.DUPLICATE_OBJECT, id: state.selectedObjectId });
+              }
+            }}
+            onColorChange={(color) => {
+              if (state.selectedObjectId) {
+                dispatch({
+                  type: ActionTypes.UPDATE_OBJECT,
+                  id: state.selectedObjectId,
+                  updates: { color },
+                });
+              }
+            }}
+            onBringToFront={() => {
+              if (state.selectedObjectId) {
+                dispatch({ type: ActionTypes.BRING_TO_FRONT, id: state.selectedObjectId });
+              }
+            }}
+            onSendToBack={() => {
+              if (state.selectedObjectId) {
+                dispatch({ type: ActionTypes.SEND_TO_BACK, id: state.selectedObjectId });
+              }
+            }}
+          />
+        )}
         <Toolbar
           tool={state.tool}
           onToolChange={(tool) => dispatch({ type: ActionTypes.SET_TOOL, tool })}
