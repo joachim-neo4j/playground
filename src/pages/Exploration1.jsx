@@ -178,8 +178,14 @@ function whiteboardReducer(state, action) {
 
 // Toolbar Component
 function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
+  const SelectIcon = () => (
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" className="ndl-icon-svg">
+      <path d="M16.3229 22.0811L11.9385 14.4876M11.9385 14.4876L8.6037 19.5387L5.09035 2.62536L17.9807 14.1249L11.9385 14.4876Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+    </svg>
+  );
+
   const tools = [
-    { id: 'select', label: 'Select', Icon: CursorArrowRaysIconOutline },
+    { id: 'select', label: 'Select', Icon: SelectIcon },
     { id: 'sticky', label: 'Sticky', Icon: RectangleStackIconOutline },
     { id: 'rectangle', label: 'Rectangle', Icon: RectangleGroupIconOutline },
     { id: 'text', label: 'Text', Icon: DocumentTextIconOutline },
