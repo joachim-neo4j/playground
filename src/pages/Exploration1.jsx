@@ -31,6 +31,7 @@ const ActionTypes = {
   DUPLICATE_OBJECT: 'DUPLICATE_OBJECT',
   BRING_TO_FRONT: 'BRING_TO_FRONT',
   SEND_TO_BACK: 'SEND_TO_BACK',
+  RESIZE_OBJECT: 'RESIZE_OBJECT',
 };
 
 // Initial state
@@ -245,6 +246,24 @@ function whiteboardReducer(state, action) {
           present: null,
           future: [],
         },
+      };
+
+    case ActionTypes.RESIZE_OBJECT:
+      const resizedObj = state.objects.find(o => o.id === action.id);
+      if (!resizedObj) return state;
+      return {
+        ...state,
+        objects: state.objects.map(obj =>
+          obj.id === action.id
+            ? {
+                ...obj,
+                x: action.x !== undefined ? action.x : obj.x,
+                y: action.y !== undefined ? action.y : obj.y,
+                width: Math.max(50, action.width || obj.width),
+                height: Math.max(20, action.height || obj.height),
+              }
+            : obj
+        ),
       };
 
     default:
@@ -949,7 +968,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   );
 }
 
-function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef) {
+function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef, onResizeHandleDown) {
   switch (obj.type) {
     case 'sticky':
       return (
@@ -979,6 +998,7 @@ function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           onUpdate={onUpdate}
           viewport={viewport}
           textareaRef={textareaRef}
+          onResizeHandleDown={onResizeHandleDown}
         />
       );
     default:
@@ -1001,6 +1021,9 @@ export default function Exploration1() {
     lastCenter: { x: 0, y: 0 },
     isTwoFingerPan: false,
   });
+  const isResizing = useRef(false);
+  const resizeHandle = useRef(null);
+  const resizeStart = useRef({ x: 0, y: 0, width: 0, height: 0 });
 
   // Convert screen coordinates to world coordinates
   const screenToWorld = useCallback((screenX, screenY) => {
@@ -1088,8 +1111,8 @@ export default function Exploration1() {
         objectType: state.tool,
         x: world.x,
         y: world.y,
-        width: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 150 : 0,
-        height: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 100 : 0, // Square for sticky
+        width: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 150 : 200,
+        height: state.tool === 'sticky' ? 200 : state.tool === 'rectangle' ? 100 : 30, // Square for sticky
         text: state.tool === 'text' ? 'Text' : state.tool === 'sticky' ? 'Note' : '',
         color: colors[state.tool],
         fontSize: 16,
@@ -1118,6 +1141,56 @@ export default function Exploration1() {
       return;
     }
 
+    if (isResizing.current && resizeHandle.current && dragObjectId.current) {
+      const rect = svgRef.current.getBoundingClientRect();
+      const screenX = e.clientX - rect.left;
+      const screenY = e.clientY - rect.top;
+      const world = screenToWorld(screenX, screenY);
+      const obj = state.objects.find(o => o.id === dragObjectId.current);
+      if (!obj) return;
+
+      const handle = resizeHandle.current;
+      let newX = resizeStart.current.x;
+      let newY = resizeStart.current.y;
+      let newWidth = resizeStart.current.width;
+      let newHeight = resizeStart.current.height;
+
+      const deltaX = world.x - (resizeStart.current.x + resizeStart.current.width);
+      const deltaY = world.y - (resizeStart.current.y + resizeStart.current.height);
+
+      if (handle === 'se') {
+        // Bottom-right
+        newWidth = Math.max(50, resizeStart.current.width + deltaX);
+        newHeight = Math.max(20, resizeStart.current.height + deltaY);
+      } else if (handle === 'sw') {
+        // Bottom-left
+        newWidth = Math.max(50, resizeStart.current.width - deltaX);
+        newHeight = Math.max(20, resizeStart.current.height + deltaY);
+        newX = resizeStart.current.x + resizeStart.current.width - newWidth;
+      } else if (handle === 'ne') {
+        // Top-right
+        newWidth = Math.max(50, resizeStart.current.width + deltaX);
+        newHeight = Math.max(20, resizeStart.current.height - deltaY);
+        newY = resizeStart.current.y + resizeStart.current.height - newHeight;
+      } else if (handle === 'nw') {
+        // Top-left
+        newWidth = Math.max(50, resizeStart.current.width - deltaX);
+        newHeight = Math.max(20, resizeStart.current.height - deltaY);
+        newX = resizeStart.current.x + resizeStart.current.width - newWidth;
+        newY = resizeStart.current.y + resizeStart.current.height - newHeight;
+      }
+
+      dispatch({
+        type: ActionTypes.RESIZE_OBJECT,
+        id: dragObjectId.current,
+        x: newX,
+        y: newY,
+        width: newWidth,
+        height: newHeight,
+      });
+      return;
+    }
+
     if (isDragging.current && dragObjectId.current) {
       const rect = svgRef.current.getBoundingClientRect();
       const screenX = e.clientX - rect.left;
@@ -1131,7 +1204,7 @@ export default function Exploration1() {
         y: world.y - dragStart.current.y,
       });
     }
-  }, [state.viewport, screenToWorld]);
+  }, [state.viewport, state.objects, screenToWorld]);
 
   // Handle pointer up
   const handlePointerUp = useCallback((e) => {
@@ -1139,6 +1212,8 @@ export default function Exploration1() {
     dragObjectId.current = null;
     isPanning.current = false;
     setIsPanningState(false);
+    isResizing.current = false;
+    resizeHandle.current = null;
     
     // Reset touch state
     touchState.current = {
@@ -1499,7 +1574,23 @@ export default function Exploration1() {
                   (e) => handleTextDoubleClick(e, obj.id),
                   (newText) => handleTextUpdate(obj.id, newText),
                   state.viewport,
-                  editingTextareaRef
+                  editingTextareaRef,
+                  (e, handle) => {
+                    e.stopPropagation();
+                    isResizing.current = true;
+                    resizeHandle.current = handle;
+                    dragObjectId.current = obj.id;
+                    const rect = svgRef.current.getBoundingClientRect();
+                    const screenX = e.clientX - rect.left;
+                    const screenY = e.clientY - rect.top;
+                    const world = screenToWorld(screenX, screenY);
+                    resizeStart.current = {
+                      x: obj.x,
+                      y: obj.y,
+                      width: obj.width || 200,
+                      height: obj.height || 30,
+                    };
+                  }
                 )
               )}
             </g>
