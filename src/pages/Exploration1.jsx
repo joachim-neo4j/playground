@@ -728,6 +728,7 @@ export default function Exploration1() {
   const dragStart = useRef({ x: 0, y: 0 });
   const dragObjectId = useRef(null);
   const isPanning = useRef(false);
+  const [isPanningState, setIsPanningState] = React.useState(false);
   const panStart = useRef({ x: 0, y: 0 });
   const touchState = useRef({
     touches: [],
@@ -755,6 +756,7 @@ export default function Exploration1() {
 
     if (state.tool === 'hand' || (state.tool === 'select' && e.shiftKey)) {
       isPanning.current = true;
+      setIsPanningState(true);
       panStart.current = { x: e.clientX, y: e.clientY };
       e.preventDefault();
       return;
@@ -870,6 +872,7 @@ export default function Exploration1() {
     isDragging.current = false;
     dragObjectId.current = null;
     isPanning.current = false;
+    setIsPanningState(false);
     
     // Reset touch state
     touchState.current = {
@@ -1204,7 +1207,7 @@ export default function Exploration1() {
               backgroundImage: 'radial-gradient(circle, #ddd 1px, transparent 1px)',
               backgroundSize: `${20 * state.viewport.zoom}px ${20 * state.viewport.zoom}px`,
               backgroundPosition: `${state.viewport.x}px ${state.viewport.y}px`,
-              cursor: isPanning.current ? 'grabbing' : state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
+              cursor: isPanningState ? 'grabbing' : state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
               touchAction: 'none',
               display: 'block',
             }}
