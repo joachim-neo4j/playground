@@ -496,10 +496,10 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     >
       <defs>
         <filter id={`shadow-${obj.id}`} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-          <feOffset dx={shadowOffset} dy={shadowOffset} result="offsetblur"/>
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+          <feOffset dx={2} dy={2} result="offsetblur"/>
           <feComponentTransfer>
-            <feFuncA type="linear" slope="0.3"/>
+            <feFuncA type="linear" slope="0.2"/>
           </feComponentTransfer>
           <feMerge>
             <feMergeNode/>
@@ -512,15 +512,15 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         width={obj.width}
         height={obj.height}
         fill={obj.color}
-        stroke={isSelected ? '#3B82F6' : 'rgba(0, 0, 0, 0.12)'}
-        strokeWidth={isSelected ? 2 : 1}
-        rx={8}
-        ry={8}
+        stroke={isSelected ? '#3B82F6' : 'none'}
+        strokeWidth={isSelected ? 2 : 0}
+        rx={6}
+        ry={6}
         filter={!isSelected ? `url(#shadow-${obj.id})` : undefined}
       />
       {/* Text or editable textarea */}
       {isEditing ? (
-        <foreignObject x={12} y={12} width={obj.width - 24} height={obj.height - 24}>
+        <foreignObject x={16} y={16} width={obj.width - 32} height={obj.height - 32}>
           <textarea
             ref={inputRef}
             value={inputValue}
@@ -529,9 +529,9 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
             onKeyDown={handleKeyDown}
             style={{
               fontSize: '14px',
-              color: '#1a1a1a',
+              color: '#374151', // Dark gray text like the image
               fontFamily: 'inherit',
-              lineHeight: '1.4',
+              lineHeight: '1.5',
               width: '100%',
               height: '100%',
               border: 'none',
@@ -545,13 +545,13 @@ function StickyNote({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         </foreignObject>
       ) : (
         obj.text && (
-          <foreignObject x={12} y={12} width={obj.width - 24} height={obj.height - 24}>
+          <foreignObject x={16} y={16} width={obj.width - 32} height={obj.height - 32}>
             <div
               style={{
                 fontSize: '14px',
-                color: '#1a1a1a',
+                color: '#374151', // Dark gray text like the image
                 fontFamily: 'inherit',
-                lineHeight: '1.4',
+                lineHeight: '1.5',
                 wordWrap: 'break-word',
                 whiteSpace: 'pre-wrap',
                 pointerEvents: 'none',
@@ -767,7 +767,7 @@ export default function Exploration1() {
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
-        sticky: '#FFF9C4', // Softer yellow color
+        sticky: '#E8F5E9', // Light green color like the image
         rectangle: '#2196F3',
         text: '#000000',
       };
