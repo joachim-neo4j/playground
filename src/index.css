@@ -157,3 +157,8 @@ aside nav [class*="Icon"] {
     width: 20px !important;
     height: 20px !important;
 }
+
+/* Toolbar button padding */
+.toolbar-button {
+    padding: 6px !important;
+}
