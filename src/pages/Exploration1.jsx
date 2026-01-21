@@ -1204,7 +1204,7 @@ export default function Exploration1() {
               backgroundImage: 'radial-gradient(circle, #ddd 1px, transparent 1px)',
               backgroundSize: `${20 * state.viewport.zoom}px ${20 * state.viewport.zoom}px`,
               backgroundPosition: `${state.viewport.x}px ${state.viewport.y}px`,
-              cursor: state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
+              cursor: isPanning.current ? 'grabbing' : state.tool === 'hand' ? 'grab' : state.tool === 'select' ? 'default' : 'crosshair',
               touchAction: 'none',
               display: 'block',
             }}
