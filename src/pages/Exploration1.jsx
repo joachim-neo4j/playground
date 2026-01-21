@@ -807,9 +807,6 @@ export default function Exploration1() {
         // Clicking on empty canvas - deselect all
         dispatch({ type: ActionTypes.DESELECT_ALL });
       }
-    } else if (!clickedObject) {
-      // For other tools, if clicking on empty canvas, deselect all
-      dispatch({ type: ActionTypes.DESELECT_ALL });
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
@@ -1078,7 +1075,7 @@ export default function Exploration1() {
     const rect = svgRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const zoomFactor = 1.1; // 10% increase
+    const zoomFactor = 1.05; // 5% increase
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
     
     const worldBefore = screenToWorld(centerX, centerY);
@@ -1099,7 +1096,7 @@ export default function Exploration1() {
     const rect = svgRef.current.getBoundingClientRect();
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const zoomFactor = 0.9; // 10% decrease
+    const zoomFactor = 0.95; // 5% decrease
     const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
     
     const worldBefore = screenToWorld(centerX, centerY);
