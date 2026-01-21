@@ -457,31 +457,55 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 
 // Object Components
 function StickyNote({ obj, isSelected, onPointerDown }) {
+  // FigJam-style sticky note with shadow and better styling
+  const shadowOffset = 2;
+  const shadowBlur = 4;
+  
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
       onPointerDown={onPointerDown}
       style={{ cursor: 'move' }}
     >
+      {/* Drop shadow */}
+      <rect
+        x={shadowOffset}
+        y={shadowOffset}
+        width={obj.width}
+        height={obj.height}
+        fill="rgba(0, 0, 0, 0.15)"
+        rx={8}
+        ry={8}
+        style={{ filter: `blur(${shadowBlur}px)` }}
+      />
+      {/* Main sticky note */}
       <rect
         width={obj.width}
         height={obj.height}
         fill={obj.color}
-        stroke={isSelected ? '#3B82F6' : 'none'}
-        strokeWidth={isSelected ? 2 : 0}
-        rx={4}
-        ry={4}
+        stroke={isSelected ? '#3B82F6' : 'rgba(0, 0, 0, 0.1)'}
+        strokeWidth={isSelected ? 2 : 1}
+        rx={8}
+        ry={8}
       />
+      {/* Text with better padding and styling */}
       {obj.text && (
-        <text
-          x={10}
-          y={25}
-          fontSize={14}
-          fill="#333"
-          style={{ pointerEvents: 'none', userSelect: 'none' }}
-        >
-          {obj.text}
-        </text>
+        <foreignObject x={12} y={12} width={obj.width - 24} height={obj.height - 24}>
+          <div
+            style={{
+              fontSize: '14px',
+              color: '#1a1a1a',
+              fontFamily: 'inherit',
+              lineHeight: '1.4',
+              wordWrap: 'break-word',
+              whiteSpace: 'pre-wrap',
+              pointerEvents: 'none',
+              userSelect: 'none',
+            }}
+          >
+            {obj.text}
+          </div>
+        </foreignObject>
       )}
     </g>
   );
@@ -676,7 +700,7 @@ export default function Exploration1() {
     } else if (['sticky', 'rectangle', 'text'].includes(state.tool)) {
       // Create new object
       const colors = {
-        sticky: '#FFEB3B',
+        sticky: '#FFEB3B', // FigJam-style yellow
         rectangle: '#2196F3',
         text: '#000000',
       };
