@@ -180,3 +180,8 @@ aside nav [class*="Icon"] {
 .toolbar-button-selected:hover {
     background-color: #e5e7eb !important; /* Keep gray-200 on hover when selected */
 }
+
+/* Font size dropdown button - override global button font-weight */
+.toolbar-button .font-size-button-text {
+    font-weight: 400 !important;
+}
