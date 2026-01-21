@@ -251,17 +251,29 @@ function whiteboardReducer(state, action) {
     case ActionTypes.RESIZE_OBJECT:
       const resizedObj = state.objects.find(o => o.id === action.id);
       if (!resizedObj) return state;
+      
+      // For text objects, scale font-size proportionally
+      let updates = {
+        x: action.x !== undefined ? action.x : resizedObj.x,
+        y: action.y !== undefined ? action.y : resizedObj.y,
+        width: Math.max(50, action.width || resizedObj.width),
+        height: Math.max(20, action.height || resizedObj.height),
+      };
+      
+      if (resizedObj.type === 'text' && action.width && action.height) {
+        // Calculate scale factor based on width (or average of width/height)
+        const widthScale = action.width / (resizedObj.width || 200);
+        const heightScale = action.height / (resizedObj.height || 30);
+        const scale = (widthScale + heightScale) / 2; // Average scale
+        const newFontSize = Math.max(8, Math.round((resizedObj.fontSize || 16) * scale));
+        updates.fontSize = newFontSize;
+      }
+      
       return {
         ...state,
         objects: state.objects.map(obj =>
           obj.id === action.id
-            ? {
-                ...obj,
-                x: action.x !== undefined ? action.x : obj.x,
-                y: action.y !== undefined ? action.y : obj.y,
-                width: Math.max(50, action.width || obj.width),
-                height: Math.max(20, action.height || obj.height),
-              }
+            ? { ...obj, ...updates }
             : obj
         ),
       };
@@ -1047,6 +1059,8 @@ function Rectangle({ obj, isSelected, onPointerDown, onResizeHandleDown }) {
 
 function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport, textareaRef, onResizeHandleDown }) {
   const inputRef = React.useRef(null);
+  const textMeasureRef = React.useRef(null);
+  const [textBounds, setTextBounds] = React.useState({ width: 0, height: 0 });
   
   // Share ref with parent
   React.useEffect(() => {
@@ -1069,6 +1083,18 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     setInputValue(obj.text || 'Text');
   }, [obj.text]);
 
+  // Measure text bounds when text or font size changes
+  React.useEffect(() => {
+    if (!isEditing && textMeasureRef.current) {
+      const measureDiv = textMeasureRef.current;
+      const bounds = measureDiv.getBoundingClientRect();
+      setTextBounds({
+        width: bounds.width,
+        height: bounds.height,
+      });
+    }
+  }, [obj.text, obj.fontSize, isEditing]);
+
   const handleBlur = () => {
     onUpdate(inputValue);
   };
@@ -1083,9 +1109,9 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
     }
   };
 
-  // Ensure text objects have width and height
-  const width = obj.width || 200;
-  const height = obj.height || 30;
+  // Use measured text bounds for selection box, or fallback to object dimensions
+  const selectionWidth = textBounds.width > 0 ? textBounds.width : (obj.width || 200);
+  const selectionHeight = textBounds.height > 0 ? textBounds.height : (obj.height || 30);
   const handleSize = 8;
 
   return (
@@ -1095,17 +1121,16 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
       onDoubleClick={isEditing ? undefined : onDoubleClick}
       style={{ cursor: isEditing ? 'text' : isSelected ? 'move' : 'text' }}
     >
-      {/* Selection box */}
+      {/* Selection box - hugging the text */}
       {isSelected && !isEditing && (
         <rect
           x={0}
           y={0}
-          width={width}
-          height={height}
+          width={selectionWidth}
+          height={selectionHeight}
           fill="none"
           stroke="#3B82F6"
           strokeWidth={2}
-          strokeDasharray="4 4"
         />
       )}
       
@@ -1129,7 +1154,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
           {/* Top-right */}
           <rect
-            x={width - handleSize / 2}
+            x={selectionWidth - handleSize / 2}
             y={-handleSize / 2}
             width={handleSize}
             height={handleSize}
@@ -1145,7 +1170,7 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           {/* Bottom-left */}
           <rect
             x={-handleSize / 2}
-            y={height - handleSize / 2}
+            y={selectionHeight - handleSize / 2}
             width={handleSize}
             height={handleSize}
             fill="#3B82F6"
@@ -1159,8 +1184,8 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
           />
           {/* Bottom-right */}
           <rect
-            x={width - handleSize / 2}
-            y={height - handleSize / 2}
+            x={selectionWidth - handleSize / 2}
+            y={selectionHeight - handleSize / 2}
             width={handleSize}
             height={handleSize}
             fill="#3B82F6"
@@ -1179,8 +1204,8 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         <foreignObject
           x={0}
           y={0}
-          width={width}
-          height={height}
+          width={selectionWidth || 200}
+          height={selectionHeight || 30}
         >
           <input
             ref={inputRef}
@@ -1208,20 +1233,18 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
         <foreignObject
           x={0}
           y={0}
-          width={width}
-          height={height}
+          width={selectionWidth || 200}
+          height={selectionHeight || 30}
         >
           <div
+            ref={textMeasureRef}
             style={{
               fontSize: `${obj.fontSize || 16}px`,
               color: obj.color || '#000',
               fontFamily: 'inherit',
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
+              display: 'inline-block',
               whiteSpace: 'nowrap',
-              overflow: 'hidden',
+              lineHeight: '1.2',
             }}
           >
             {obj.text || 'Text'}
@@ -1866,6 +1889,7 @@ export default function Exploration1() {
                       y: obj.y,
                       width: obj.width || 200,
                       height: obj.height || 30,
+                      fontSize: obj.fontSize || 16,
                     };
                   }
                 )
