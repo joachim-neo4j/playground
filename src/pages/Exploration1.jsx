@@ -22,12 +22,15 @@ const ActionTypes = {
   SET_VIEWPORT: 'SET_VIEWPORT',
   UNDO: 'UNDO',
   REDO: 'REDO',
+  START_EDIT_TEXT: 'START_EDIT_TEXT',
+  STOP_EDIT_TEXT: 'STOP_EDIT_TEXT',
 };
 
 // Initial state
 const initialState = {
   objects: [],
   selectedObjectId: null,
+  editingTextId: null, // ID of text object being edited
   tool: 'select', // 'select', 'sticky', 'rectangle', 'text', 'hand'
   viewport: {
     x: 0,
@@ -170,6 +173,18 @@ function whiteboardReducer(state, action) {
         },
       };
     }
+
+    case ActionTypes.START_EDIT_TEXT:
+      return {
+        ...state,
+        editingTextId: action.id,
+      };
+
+    case ActionTypes.STOP_EDIT_TEXT:
+      return {
+        ...state,
+        editingTextId: null,
+      };
 
     default:
       return state;
@@ -365,12 +380,73 @@ function Rectangle({ obj, isSelected, onPointerDown }) {
   );
 }
 
-function TextObject({ obj, isSelected, onPointerDown }) {
+function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport }) {
+  const inputRef = React.useRef(null);
+  const [inputValue, setInputValue] = React.useState(obj.text || 'Text');
+
+  React.useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+      inputRef.current.select();
+    }
+  }, [isEditing]);
+
+  React.useEffect(() => {
+    setInputValue(obj.text || 'Text');
+  }, [obj.text]);
+
+  const handleBlur = () => {
+    onUpdate(inputValue);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      onUpdate(inputValue);
+    } else if (e.key === 'Escape') {
+      setInputValue(obj.text || 'Text');
+      onUpdate(null); // Cancel editing
+    }
+  };
+
+  if (isEditing) {
+    // Position input in world coordinates (will be transformed by parent g element)
+    return (
+      <foreignObject
+        x={0}
+        y={-(obj.fontSize || 16)}
+        width={Math.max(200, 200 / viewport.zoom)}
+        height={(obj.fontSize || 16) * 1.5}
+      >
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
+          style={{
+            fontSize: `${obj.fontSize || 16}px`,
+            color: obj.color || '#000',
+            border: '2px solid #3B82F6',
+            borderRadius: '4px',
+            padding: '2px 4px',
+            outline: 'none',
+            width: '100%',
+            backgroundColor: 'white',
+            fontFamily: 'inherit',
+          }}
+        />
+      </foreignObject>
+    );
+  }
+
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
       onPointerDown={onPointerDown}
-      style={{ cursor: 'move' }}
+      onDoubleClick={onDoubleClick}
+      style={{ cursor: isSelected ? 'move' : 'text' }}
     >
       <text
         x={0}
@@ -386,14 +462,25 @@ function TextObject({ obj, isSelected, onPointerDown }) {
   );
 }
 
-function renderObject(obj, isSelected, onPointerDown) {
+function renderObject(obj, isSelected, isEditing, onPointerDown, onDoubleClick, onUpdate, viewport) {
   switch (obj.type) {
     case 'sticky':
       return <StickyNote key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
     case 'rectangle':
       return <Rectangle key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
     case 'text':
-      return <TextObject key={obj.id} obj={obj} isSelected={isSelected} onPointerDown={onPointerDown} />;
+      return (
+        <TextObject
+          key={obj.id}
+          obj={obj}
+          isSelected={isSelected}
+          isEditing={isEditing}
+          onPointerDown={onPointerDown}
+          onDoubleClick={onDoubleClick}
+          onUpdate={onUpdate}
+          viewport={viewport}
+        />
+      );
     default:
       return null;
   }
@@ -561,6 +648,10 @@ export default function Exploration1() {
   // Handle object pointer down
   const handleObjectPointerDown = useCallback((e, objId) => {
     if (state.tool !== 'select') return;
+    if (state.editingTextId === objId) {
+      e.stopPropagation();
+      return; // Don't start dragging if editing
+    }
     e.stopPropagation();
     const rect = svgRef.current.getBoundingClientRect();
     const screenX = e.clientX - rect.left;
@@ -577,7 +668,34 @@ export default function Exploration1() {
         y: world.y - obj.y,
       };
     }
-  }, [state.tool, state.objects, screenToWorld]);
+  }, [state.tool, state.objects, state.editingTextId, screenToWorld]);
+
+  // Handle double-click on text object to start editing
+  const handleTextDoubleClick = useCallback((e, objId) => {
+    if (state.tool !== 'select') return;
+    e.stopPropagation();
+    e.preventDefault();
+    const obj = state.objects.find(o => o.id === objId);
+    if (obj && obj.type === 'text') {
+      dispatch({ type: ActionTypes.SELECT_OBJECT, id: objId });
+      dispatch({ type: ActionTypes.START_EDIT_TEXT, id: objId });
+    }
+  }, [state.tool, state.objects]);
+
+  // Handle text update
+  const handleTextUpdate = useCallback((objId, newText) => {
+    if (newText === null) {
+      // Cancel editing
+      dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+      return;
+    }
+    dispatch({
+      type: ActionTypes.UPDATE_OBJECT,
+      id: objId,
+      updates: { text: newText },
+    });
+    dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
+  }, []);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -676,7 +794,11 @@ export default function Exploration1() {
                 renderObject(
                   obj,
                   obj.id === state.selectedObjectId,
-                  (e) => handleObjectPointerDown(e, obj.id)
+                  obj.id === state.editingTextId,
+                  (e) => handleObjectPointerDown(e, obj.id),
+                  (e) => handleTextDoubleClick(e, obj.id),
+                  (newText) => handleTextUpdate(obj.id, newText),
+                  state.viewport
                 )
               )}
             </g>
