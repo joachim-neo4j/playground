@@ -628,8 +628,10 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
       );
 
       const ItalicIcon = () => (
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-4.5 16.5h4.5M9.75 3.75l-3 16.5m7.5-16.5l-3 16.5" />
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+          <path d="M17.625 6.37402H12.375" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+          <path d="M11.625 17.624H6.375" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
+          <path d="M9 17.624L15 6.37402" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"></path>
         </svg>
       );
 
