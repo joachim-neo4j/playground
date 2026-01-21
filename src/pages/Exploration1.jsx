@@ -773,10 +773,12 @@ export default function Exploration1() {
             world.y <= editingObj.y + editingObj.height
           );
           if (!isClickInside) {
-            // Blur the textarea to trigger save
+            // Blur the textarea to trigger save and remove focus
             if (editingTextareaRef.current) {
               editingTextareaRef.current.blur();
             }
+            // Also stop editing state immediately
+            dispatch({ type: ActionTypes.STOP_EDIT_TEXT });
           }
         }
       }
