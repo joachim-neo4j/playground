@@ -343,7 +343,7 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
 }
 
 // Zoom Toolbar Component
-function ZoomToolbar({ zoom, onZoomIn, onZoomOut }) {
+function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
   const [hoveredButton, setHoveredButton] = React.useState(null);
   const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
 
@@ -431,7 +431,12 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut }) {
           >
             <ZoomOutIcon />
           </button>
-          <div className="px-2 text-sm font-medium" style={{ color: '#4b5563', minWidth: '48px', textAlign: 'center' }}>
+          <div 
+            className="px-2 text-sm font-medium cursor-pointer" 
+            style={{ color: '#4b5563', minWidth: '48px', textAlign: 'center' }}
+            onDoubleClick={onResetZoom}
+            title="Double-click to reset zoom to 100%"
+          >
             {zoomPercentage}%
           </div>
           <button
@@ -615,9 +620,7 @@ export default function Exploration1() {
   const panStart = useRef({ x: 0, y: 0 });
   const touchState = useRef({
     touches: [],
-    lastDistance: 0,
     lastCenter: { x: 0, y: 0 },
-    isPinching: false,
     isTwoFingerPan: false,
   });
 
@@ -737,9 +740,7 @@ export default function Exploration1() {
     // Reset touch state
     touchState.current = {
       touches: [],
-      lastDistance: 0,
       lastCenter: { x: 0, y: 0 },
-      isPinching: false,
       isTwoFingerPan: false,
     };
   }, []);
@@ -764,14 +765,11 @@ export default function Exploration1() {
     if (e.touches.length === 2) {
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
-      const distance = getTouchDistance(touch1, touch2);
       const center = getTouchCenter(touch1, touch2);
       
       touchState.current = {
         touches: [touch1, touch2],
-        lastDistance: distance,
         lastCenter: center,
-        isPinching: false,
         isTwoFingerPan: false,
       };
       
@@ -787,71 +785,29 @@ export default function Exploration1() {
     if (e.touches.length === 2) {
       const touch1 = e.touches[0];
       const touch2 = e.touches[1];
-      const distance = getTouchDistance(touch1, touch2);
       const center = getTouchCenter(touch1, touch2);
       
-      // Determine if this is a pinch (distance changing significantly) or pan (distance relatively constant)
-      const distanceChange = Math.abs(distance - touchState.current.lastDistance);
-      const distanceChangePercent = touchState.current.lastDistance > 0 
-        ? (distanceChange / touchState.current.lastDistance) * 100 
-        : 0;
-      
-      // Higher threshold (15%) to distinguish pinch from accidental distance changes during panning
-      const isPinching = distanceChangePercent > 15;
-      
-      if (isPinching && touchState.current.lastDistance > 0) {
-        // Pinch to zoom - only when distance changes significantly
-        const rect = svgRef.current.getBoundingClientRect();
-        const screenX = center.x - rect.left;
-        const screenY = center.y - rect.top;
-        
-        // Calculate zoom factor based on distance change
-        const distanceDelta = distance - touchState.current.lastDistance;
-        const zoomFactor = 1 + (distanceDelta * 0.01);
-        const newZoom = Math.max(0.1, Math.min(3, state.viewport.zoom * zoomFactor));
-        
-        // Zoom towards the center point between the two touches
-        const worldBefore = screenToWorld(screenX, screenY);
-        const newX = screenX - worldBefore.x * newZoom;
-        const newY = screenY - worldBefore.y * newZoom;
+      // Two finger pan only
+      if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
+        const dx = center.x - touchState.current.lastCenter.x;
+        const dy = center.y - touchState.current.lastCenter.y;
         
         dispatch({
           type: ActionTypes.SET_VIEWPORT,
           viewport: {
-            x: newX,
-            y: newY,
-            zoom: newZoom,
+            x: state.viewport.x + dx,
+            y: state.viewport.y + dy,
+            zoom: state.viewport.zoom,
           },
         });
-        
-        touchState.current.isPinching = true;
-        touchState.current.isTwoFingerPan = false;
-      } else {
-        // Two finger pan (default behavior - distance relatively constant or small changes)
-        if (touchState.current.lastCenter.x !== 0 || touchState.current.lastCenter.y !== 0) {
-          const dx = center.x - touchState.current.lastCenter.x;
-          const dy = center.y - touchState.current.lastCenter.y;
-          
-          dispatch({
-            type: ActionTypes.SET_VIEWPORT,
-            viewport: {
-              x: state.viewport.x + dx,
-              y: state.viewport.y + dy,
-              zoom: state.viewport.zoom,
-            },
-          });
-        }
-        
-        touchState.current.isTwoFingerPan = true;
-        touchState.current.isPinching = false;
       }
       
-      touchState.current.lastDistance = distance;
       touchState.current.lastCenter = center;
+      touchState.current.isTwoFingerPan = true;
       
       e.preventDefault();
     }
-  }, [state.viewport, screenToWorld]);
+  }, [state.viewport]);
 
   // Handle touch end
   const handleTouchEnd = useCallback((e) => {
@@ -1020,6 +976,26 @@ export default function Exploration1() {
     });
   }, [state.viewport, screenToWorld]);
 
+  const handleResetZoom = useCallback(() => {
+    const rect = svgRef.current.getBoundingClientRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const newZoom = 1; // Reset to 100%
+    
+    const worldBefore = screenToWorld(centerX, centerY);
+    const newX = centerX - worldBefore.x * newZoom;
+    const newY = centerY - worldBefore.y * newZoom;
+    
+    dispatch({
+      type: ActionTypes.SET_VIEWPORT,
+      viewport: {
+        x: newX,
+        y: newY,
+        zoom: newZoom,
+      },
+    });
+  }, [state.viewport, screenToWorld]);
+
   // Prevent scrolling on the container, but allow zoom on SVG
   useEffect(() => {
     const container = containerRef.current;
@@ -1121,6 +1097,7 @@ export default function Exploration1() {
           zoom={state.viewport.zoom}
           onZoomIn={handleZoomIn}
           onZoomOut={handleZoomOut}
+          onResetZoom={handleResetZoom}
         />
       </div>
     </Layout>
