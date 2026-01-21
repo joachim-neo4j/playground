@@ -630,10 +630,16 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                     style={{
                       width: '24px',
                       height: '24px',
+                      minWidth: '24px',
+                      minHeight: '24px',
+                      maxWidth: '24px',
+                      maxHeight: '24px',
                       borderRadius: '50%',
                       backgroundColor: color,
                       border: obj.color === color ? '2px solid #3B82F6' : '1px solid #d1d5db',
                       cursor: 'pointer',
+                      padding: 0,
+                      flexShrink: 0,
                     }}
                     title={color}
                   />
