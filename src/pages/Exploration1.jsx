@@ -548,7 +548,7 @@ function ZoomToolbar({ zoom, onZoomIn, onZoomOut, onResetZoom }) {
 }
 
 // Floating Toolbar Component (appears above selected items)
-function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColorChange, onBringToFront, onSendToBack }) {
+function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColorChange, onBringToFront, onSendToBack, onFormatChange }) {
   const toolbarRef = React.useRef(null);
   const [position, setPosition] = React.useState({ x: 0, y: 0 });
   const [showColorPicker, setShowColorPicker] = React.useState(false);
@@ -605,31 +605,103 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
     '#FF80BF', // Very dark pink
   ];
 
-  const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
+      const supportsColor = ['sticky', 'rectangle', 'text'].includes(obj.type);
+      const supportsFormatting = ['sticky', 'text'].includes(obj.type);
 
-  return (
-    <div
-      ref={toolbarRef}
-      className="fixed z-[10001]"
-      style={{
-        left: `${position.x}px`,
-        top: `${position.y}px`,
-        transform: 'translate(-50%, 0)',
-        pointerEvents: 'auto',
-      }}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div
-        className="rounded-lg border flex items-center gap-1 px-1 py-1"
-        style={{
-          backgroundColor: '#ffffff',
-          borderColor: '#d1d5db',
-          borderWidth: '1px',
-          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        }}
-      >
-        {/* Color picker (circle) for sticky, rectangle, and text */}
-        {supportsColor && (
+      // Formatting icons
+      const BoldIcon = () => (
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 12h6.75m-6.75 0V9.75m0 0h6.75m-6.75 0h-1.5a3.75 3.75 0 0 0 0 7.5h1.5m6.75-7.5V12m0 0v2.25m0-2.25h-1.5m1.5 0h6.75m-6.75 0v2.25m0-2.25h-1.5a3.75 3.75 0 0 0 0-7.5h1.5" />
+        </svg>
+      );
+
+      const ItalicIcon = () => (
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 3.75h4.5m-4.5 16.5h4.5M9.75 3.75l-3 16.5m7.5-16.5l-3 16.5" />
+        </svg>
+      );
+
+      const UnderlineIcon = () => (
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth="1.5" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6 4v6a6 6 0 0 0 12 0V4M4 20h16" />
+        </svg>
+      );
+
+      return (
+        <div
+          ref={toolbarRef}
+          className="fixed z-[10001]"
+          style={{
+            left: `${position.x}px`,
+            top: `${position.y}px`,
+            transform: 'translate(-50%, 0)',
+            pointerEvents: 'auto',
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div
+            className="rounded-lg border flex items-center gap-1 px-1 py-1"
+            style={{
+              backgroundColor: '#ffffff',
+              borderColor: '#d1d5db',
+              borderWidth: '1px',
+              boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            }}
+          >
+            {/* Formatting buttons for text and sticky notes */}
+            {supportsFormatting && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFormatChange('bold', !obj.bold);
+                  }}
+                  className={`toolbar-button rounded transition-colors flex items-center justify-center ${obj.bold ? 'toolbar-button-selected' : ''}`}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    padding: '6px',
+                  }}
+                  title="Bold"
+                >
+                  <BoldIcon />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFormatChange('italic', !obj.italic);
+                  }}
+                  className={`toolbar-button rounded transition-colors flex items-center justify-center ${obj.italic ? 'toolbar-button-selected' : ''}`}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    padding: '6px',
+                  }}
+                  title="Italic"
+                >
+                  <ItalicIcon />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onFormatChange('underline', !obj.underline);
+                  }}
+                  className={`toolbar-button rounded transition-colors flex items-center justify-center ${obj.underline ? 'toolbar-button-selected' : ''}`}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    padding: '6px',
+                  }}
+                  title="Underline"
+                >
+                  <UnderlineIcon />
+                </button>
+                <div className="w-px h-6 bg-gray-200 mx-1"></div> {/* Separator */}
+              </>
+            )}
+
+            {/* Color picker (circle) for sticky, rectangle, and text */}
+            {supportsColor && (
           <div className="relative">
             <button
               onClick={(e) => {
@@ -1293,6 +1365,9 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               resize: 'none',
               overflow: 'hidden',
               lineHeight: '1.2',
+              fontWeight: obj.bold ? 'bold' : 'normal',
+              fontStyle: obj.italic ? 'italic' : 'normal',
+              textDecoration: obj.underline ? 'underline' : 'none',
             }}
           />
         </foreignObject>
@@ -1313,6 +1388,9 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
               whiteSpace: 'pre-wrap',
               wordWrap: 'break-word',
               lineHeight: '1.2',
+              fontWeight: obj.bold ? 'bold' : 'normal',
+              fontStyle: obj.italic ? 'italic' : 'normal',
+              textDecoration: obj.underline ? 'underline' : 'none',
             }}
           >
             {obj.text || 'Text'}
