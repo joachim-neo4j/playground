@@ -414,62 +414,60 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      onUpdate(inputValue);
+      inputRef.current?.blur(); // This will trigger handleBlur
     } else if (e.key === 'Escape') {
       setInputValue(obj.text || 'Text');
       onUpdate(null); // Cancel editing
     }
   };
 
-  if (isEditing) {
-    // Position input in world coordinates (will be transformed by parent g element)
-    return (
-      <foreignObject
-        x={0}
-        y={-(obj.fontSize || 16)}
-        width={Math.max(200, 200 / viewport.zoom)}
-        height={(obj.fontSize || 16) * 1.5}
-      >
-        <input
-          ref={inputRef}
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onBlur={handleBlur}
-          onKeyDown={handleKeyDown}
-          style={{
-            fontSize: `${obj.fontSize || 16}px`,
-            color: obj.color || '#000',
-            border: '2px solid #3B82F6',
-            borderRadius: '4px',
-            padding: '2px 4px',
-            outline: 'none',
-            width: '100%',
-            backgroundColor: 'white',
-            fontFamily: 'inherit',
-          }}
-        />
-      </foreignObject>
-    );
-  }
-
   return (
     <g
       transform={`translate(${obj.x}, ${obj.y})`}
-      onPointerDown={onPointerDown}
-      onDoubleClick={onDoubleClick}
-      style={{ cursor: isSelected ? 'move' : 'text' }}
+      onPointerDown={isEditing ? undefined : onPointerDown}
+      onDoubleClick={isEditing ? undefined : onDoubleClick}
+      style={{ cursor: isEditing ? 'text' : isSelected ? 'move' : 'text' }}
     >
-      <text
-        x={0}
-        y={0}
-        fontSize={obj.fontSize || 16}
-        fill={obj.color || '#000'}
-        stroke={isSelected ? '#3B82F6' : 'none'}
-        strokeWidth={isSelected ? 1 : 0}
-      >
-        {obj.text || 'Text'}
-      </text>
+      {isEditing ? (
+        <foreignObject
+          x={0}
+          y={-(obj.fontSize || 16)}
+          width={Math.max(200, 200 / viewport.zoom)}
+          height={(obj.fontSize || 16) * 1.5}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            style={{
+              fontSize: `${obj.fontSize || 16}px`,
+              color: obj.color || '#000',
+              border: 'none',
+              outline: 'none',
+              width: '100%',
+              backgroundColor: 'transparent',
+              fontFamily: 'inherit',
+              padding: 0,
+              margin: 0,
+              background: 'transparent',
+            }}
+          />
+        </foreignObject>
+      ) : (
+        <text
+          x={0}
+          y={0}
+          fontSize={obj.fontSize || 16}
+          fill={obj.color || '#000'}
+          stroke={isSelected ? '#3B82F6' : 'none'}
+          strokeWidth={isSelected ? 1 : 0}
+        >
+          {obj.text || 'Text'}
+        </text>
+      )}
     </g>
   );
 }
