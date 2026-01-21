@@ -215,12 +215,11 @@ function Toolbar({ tool, onToolChange, onUndo, onRedo, canUndo, canRedo }) {
             <button
               key={t.id}
               onClick={() => onToolChange(t.id)}
-              className={`rounded transition-colors flex items-center justify-center ${
+              className={`toolbar-button rounded transition-colors flex items-center justify-center ${
                 tool === t.id
-                  ? 'bg-gray-200'
-                  : 'hover:bg-gray-100'
+                  ? 'toolbar-button-selected'
+                  : ''
               }`}
-              className="toolbar-button"
               style={{ width: '32px', height: '32px', minWidth: '32px', minHeight: '32px', maxWidth: '32px', maxHeight: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
               title={t.label}
             >

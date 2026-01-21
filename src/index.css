@@ -162,3 +162,17 @@ aside nav [class*="Icon"] {
 .toolbar-button {
     padding: 6px !important;
 }
+
+/* Toolbar button hover state */
+.toolbar-button:hover:not(:disabled) {
+    background-color: #f3f4f6 !important; /* gray-100 */
+}
+
+/* Toolbar button selected/active state */
+.toolbar-button-selected {
+    background-color: #e5e7eb !important; /* gray-200 */
+}
+
+.toolbar-button-selected:hover {
+    background-color: #e5e7eb !important; /* Keep gray-200 on hover when selected */
+}
