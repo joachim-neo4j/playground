@@ -1124,6 +1124,21 @@ function TextObject({ obj, isSelected, isEditing, onPointerDown, onDoubleClick, 
 
   const handleBlur = () => {
     onUpdate(inputValue);
+    // Trigger measurement update after text change to adapt box instantly
+    requestAnimationFrame(() => {
+      if (textMeasureRef.current) {
+        const measureDiv = textMeasureRef.current;
+        const newWidth = measureDiv.scrollWidth;
+        const newHeight = measureDiv.scrollHeight;
+        if (newWidth > 0 && newHeight > 0) {
+          setTextBounds({
+            width: newWidth,
+            height: newHeight,
+          });
+          onUpdate(null, { width: newWidth, height: newHeight });
+        }
+      }
+    });
   };
 
   const handleKeyDown = (e) => {
