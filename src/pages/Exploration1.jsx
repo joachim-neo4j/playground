@@ -602,22 +602,35 @@ export default function Exploration1() {
   const canUndo = state.history.past.length > 0;
   const canRedo = state.history.future.length > 0;
 
-  // Prevent scrolling on the container
+  // Prevent scrolling on the container, but allow zoom on SVG
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    const svg = svgRef.current;
+    if (!container || !svg) return;
 
     const preventScroll = (e) => {
       e.preventDefault();
       e.stopPropagation();
     };
 
-    container.addEventListener('wheel', preventScroll, { passive: false });
+    const handleWheelOnContainer = (e) => {
+      // If the wheel event is on the SVG or its children, allow it for zoom
+      // The SVG's onWheel handler will take care of it
+      if (e.target === svg || svg.contains(e.target)) {
+        // Don't prevent default - let the SVG's onWheel handle it
+        return;
+      }
+      // Otherwise, prevent scrolling
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    container.addEventListener('wheel', handleWheelOnContainer, { passive: false });
     container.addEventListener('touchmove', preventScroll, { passive: false });
     container.addEventListener('scroll', preventScroll, { passive: false });
 
     return () => {
-      container.removeEventListener('wheel', preventScroll);
+      container.removeEventListener('wheel', handleWheelOnContainer);
       container.removeEventListener('touchmove', preventScroll);
       container.removeEventListener('scroll', preventScroll);
     };
