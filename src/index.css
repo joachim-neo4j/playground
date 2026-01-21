@@ -184,4 +184,5 @@ aside nav [class*="Icon"] {
 /* Font size dropdown button - override global button font-weight */
 .toolbar-button .font-size-button-text {
     font-weight: 400 !important;
+    font-size: 12px !important;
 }

@@ -731,7 +731,7 @@ function FloatingToolbar({ obj, viewport, svgRef, onDelete, onDuplicate, onColor
                   }}
                   title="Font size"
                 >
-                  <span className="font-size-button-text" style={{ fontSize: '12px' }}>
+                  <span className="font-size-button-text" style={{ fontSize: '12px !important' }}>
                     {obj.fontSize || 16}px
                   </span>
                 </button>
